@@ -131,7 +131,18 @@ function Home(props) {
                               setChecked(!checked);
                             }}
                           />
-                          <Text style={[styles.body]}>{subCategory}</Text>
+                          <Text
+                            style={[
+                              styles.body,
+                              {
+                                textDecorationLine: checked
+                                  ? 'line-through'
+                                  : 'none',
+                                textDecorationStyle: 'solid',
+                              },
+                            ]}>
+                            {subCategory}
+                          </Text>
                         </View>
                       ))}
                     </View>
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   card: {
-    flexGrow: 1,
+    // flexGrow: 1,
     padding: 10,
     elevation: 10,
     // alignItems: 'center',
@@ -188,7 +199,7 @@ const styles = StyleSheet.create({
   },
   subTask: {
     flexDirection: 'row',
-    paddingLeft: 20,
+    paddingLeft: 10,
     alignItems: 'center',
   },
   statusContainer: {

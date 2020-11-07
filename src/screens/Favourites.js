@@ -6,10 +6,11 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Styles} from '../styles/Styles';
 import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
 import NoFilesComponent from '../components/NoFilesComponent';
+import {useTheme, Checkbox, ProgressBar} from 'react-native-paper';
 
 function Favourites(props) {
   const [state, favdispatch] = useReducer(FavFilesReducer);
-
+  const {colors} = useTheme();
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
@@ -39,14 +40,15 @@ function Favourites(props) {
 
   return (
     <>
-      <DrawerHeaderCompponent
+      {/* <DrawerHeaderCompponent
         header={'Favourites'}
         icon={'menu'}
         navigation={props.navigation}
-      />
+      /> */}
 
       {/* <NoFilesComponent /> */}
-      <View style={Styles.container}>
+      <View
+        style={[Styles.container, {backgroundColor: colors.BackgroundColor}]}>
         {state && (
           <FilesComponent
             navigation={props.navigation}

@@ -285,7 +285,8 @@ function FilesComponent(props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={props.files}
+        data={[1, 2, 3]}
+        numColumns={2}
         keyExtractor={(item, index) => index.toString()}
         refreshControl={
           <RefreshControl

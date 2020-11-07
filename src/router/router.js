@@ -70,7 +70,7 @@ function Tabs() {
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon
-              name={focused ? 'star' : 'star-outline'}
+              name={focused ? 'pencil' : 'pencil-outline'}
               size={25}
               color={color}
             />
@@ -84,7 +84,7 @@ function Tabs() {
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon
-              name={focused ? 'clock' : 'clock-outline'}
+              name={focused ? 'star' : 'star-outline'}
               size={25}
               color={color}
             />

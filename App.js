@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -27,9 +27,13 @@ import {
   DarkTheme as PaperDarkTheme,
 } from 'react-native-paper';
 import MainStack from './src/router/router';
+import AppIntro from './src/screens/AppIntro';
+import AsyncStorage from '@react-native-community/async-storage';
+import {STORAGE_KEY} from './src/constants/Constants';
 
 const App = () => {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const [showMainApp, setShowMainApp] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const CustomDefaultTheme = {
     ...NavigationDefaultTheme,
     ...PaperDefaultTheme,
@@ -63,7 +67,7 @@ const App = () => {
       PrimaryColor: '#2b2b39',
       SecondaryColor: '#191919',
       PlaceholderColor: '#40404c',
-      BackgroundColor: '#000',
+      BackgroundColor: '#262626',
       HeadingColor: '#e5e5e5',
       IconColor: 'grey',
       BorderColor: 'grey',
@@ -72,14 +76,31 @@ const App = () => {
     },
   };
 
+  useEffect(() => {
+    async function fetchMyAPI() {
+      const isShown = await AsyncStorage.getItem(STORAGE_KEY);
+      console.log(isShown);
+      if (isShown === null || isShown === 'false') {
+        setShowMainApp(false);
+      } else if (isShown === 'true') {
+        setShowMainApp(true);
+      }
+    }
+
+    fetchMyAPI();
+  }, [showMainApp]);
+
   const theme = !isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
   return (
     <PaperProvider theme={theme}>
       <StatusBar backgroundColor={theme.colors.SecondaryColor} />
-      <NavigationContainer theme={theme}>
-        <MainStack />
-      </NavigationContainer>
+      {showMainApp && (
+        <NavigationContainer theme={theme}>
+          <MainStack />
+        </NavigationContainer>
+      )}
+      {!showMainApp && <AppIntro setShowMainApp={setShowMainApp} />}
     </PaperProvider>
   );
 };
