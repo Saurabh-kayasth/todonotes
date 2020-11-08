@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useReducer, useContext} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {Styles} from '../styles/Styles';
 import {
@@ -12,8 +12,8 @@ import {Transition, Transitioning} from 'react-native-reanimated';
 // import data from './data';
 import TodoModel from '../Data/TodoModel';
 import {TasksReducer} from '../context/ToDoApp/TasksContext';
-import {FlatList, ScrollView} from 'react-native-gesture-handler';
-import ReadMore from 'react-native-read-more-text';
+import {FlatList} from 'react-native-gesture-handler';
+// import ReadMore from 'react-native-read-more-text';
 
 const transition = (
   <Transition.Together>
@@ -90,28 +90,26 @@ function Home(props) {
     setSubTasks(subtaskList);
   };
 
-  const _renderTruncatedFooter = (handlePress) => {
-    return (
-      <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
-        Read more
-      </Text>
-    );
-  };
+  // const _renderTruncatedFooter = (handlePress) => {
+  //   return (
+  //     <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
+  //       Read more
+  //     </Text>
+  //   );
+  // };
 
-  const _renderRevealedFooter = (handlePress) => {
-    return (
-      <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
-        Show less
-      </Text>
-    );
-  };
+  // const _renderRevealedFooter = (handlePress) => {
+  //   return (
+  //     <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
+  //       Show less
+  //     </Text>
+  //   );
+  // };
 
   return (
     <>
       <View
         style={[Styles.container, {backgroundColor: colors.BackgroundColor}]}>
-        {/* <ScrollView> */}
-
         {state && (
           <Transitioning.View
             ref={ref}
@@ -125,7 +123,10 @@ function Home(props) {
                     key={item.id.toString()}
                     style={[
                       styles.cardContainer,
-                      {backgroundColor: colors.SecondaryColor},
+                      {
+                        backgroundColor: colors.SecondaryColor,
+                        marginBottom: index + 1 === state.tasks.length ? 20 : 0,
+                      },
                     ]}>
                     <TouchableOpacity
                       onPress={() => handleTaskOpen(item.id, index)}
@@ -155,14 +156,14 @@ function Home(props) {
                       <>
                         {item.description.length > 0 && (
                           <View style={styles.textContainer}>
-                            <ReadMore
+                            {/* <ReadMore
                               numberOfLines={3}
                               renderTruncatedFooter={_renderTruncatedFooter}
-                              renderRevealedFooter={_renderRevealedFooter}>
-                              <Text style={styles.description}>
-                                {item.description}
-                              </Text>
-                            </ReadMore>
+                              renderRevealedFooter={_renderRevealedFooter}> */}
+                            <Text style={styles.description}>
+                              {item.description}
+                            </Text>
+                            {/* </ReadMore> */}
                           </View>
                         )}
 
@@ -180,14 +181,8 @@ function Home(props) {
                 );
               }}
             />
-            {/* {state.tasks.map((item, index) => {
-              return (
-                
-              );
-            })} */}
           </Transitioning.View>
         )}
-        {/* </ScrollView> */}
         <FAB
           style={[styles.fab, {backgroundColor: colors.SecondaryColor}]}
           small
