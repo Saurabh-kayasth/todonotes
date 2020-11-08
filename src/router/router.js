@@ -17,6 +17,7 @@ import {
   SecondaryColor,
 } from '../constants/Theme';
 import {useTheme} from 'react-native-paper';
+import AddTask from '../screens/AddTask';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -99,20 +100,39 @@ function Tabs() {
 const Stack = createStackNavigator();
 
 export default function MainStack() {
+  const {colors} = useTheme();
   return (
-    <Stack.Navigator
-      initialRouteName="maintabs"
-      mode="modal"
-      screenOptions={{gestureEnabled: false}}>
+    <Stack.Navigator initialRouteName="maintabs">
       <Stack.Screen
         component={Tabs}
         name="maintabs"
-        options={{headerShown: false, gestureEnabled: false}}
+        options={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: colors.SecondaryColor,
+          },
+        }}
       />
       <Stack.Screen
         component={Folder}
         name="folder"
-        options={{headerShown: false, gestureEnabled: false}}
+        options={{
+          headerShown: false,
+          headerStyle: {
+            backgroundColor: colors.SecondaryColor,
+          },
+        }}
+      />
+      <Stack.Screen
+        component={AddTask}
+        name="addTask"
+        options={{
+          headerShown: true,
+          headerTitle: 'Add Task',
+          headerStyle: {
+            backgroundColor: colors.SecondaryColor,
+          },
+        }}
       />
     </Stack.Navigator>
   );

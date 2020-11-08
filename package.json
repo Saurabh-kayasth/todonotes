@@ -27,6 +27,8 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-loading-spinner-overlay": "^1.1.0",
     "react-native-options-menu": "^2.0.2",
+    "react-native-paper": "^3.6.0",
+    "react-native-read-more-text": "^1.1.2",
     "react-native-reanimated": "^1.8.0",
     "react-native-safe-area-context": "^0.7.3",
     "react-native-safe-area-view": "^1.0.0",
@@ -34,8 +36,7 @@
     "react-native-share": "^4.0.1",
     "react-native-tab-view": "^2.15.1",
     "react-native-vector-icons": "^6.6.0",
-    "realm": "^5.0.4",
-    "react-native-paper": "^3.6.0"
+    "realm": "^5.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

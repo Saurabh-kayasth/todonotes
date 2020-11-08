@@ -46,7 +46,7 @@ const App = () => {
       PrimaryColor: '#fff',
       SecondaryColor: '#fff',
       PlaceholderColor: 'grey',
-      BackgroundColor: '#e5e5e5',
+      BackgroundColor: '#f4f4f4',
       HeadingColor: '#000',
       IconColor: '#333333',
       BorderColor: '#e5e5e5',
@@ -91,7 +91,7 @@ const App = () => {
   }, [showMainApp]);
 
   const theme = !isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-
+  console.disableYellowBox = true;
   return (
     <PaperProvider theme={theme}>
       <StatusBar backgroundColor={theme.colors.SecondaryColor} />

@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer} from 'react';
 import {View} from 'react-native';
 import FilesComponent from '../components/FilesComponent';
-import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
+// import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
 import {useFocusEffect} from '@react-navigation/native';
 import {Styles} from '../styles/Styles';
 import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
@@ -9,34 +9,34 @@ import NoFilesComponent from '../components/NoFilesComponent';
 import {useTheme, Checkbox, ProgressBar} from 'react-native-paper';
 
 function Favourites(props) {
-  const [state, favdispatch] = useReducer(FavFilesReducer);
+  // const [state, favdispatch] = useReducer(FavFilesReducer);
   const {colors} = useTheme();
-  useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     let isActive = true;
 
-      const fetchUser = async () => {
-        try {
-          if (isActive) {
-            favdispatch({type: 'get'});
-            console.log('focusing................');
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      };
+  //     const fetchUser = async () => {
+  //       try {
+  //         if (isActive) {
+  //           favdispatch({type: 'get'});
+  //           console.log('focusing................');
+  //         }
+  //       } catch (e) {
+  //         console.log(e);
+  //       }
+  //     };
 
-      fetchUser();
+  //     fetchUser();
 
-      return () => {
-        isActive = false;
-      };
-    }, []),
-  );
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   }, []),
+  // );
 
-  useEffect(() => {
-    favdispatch({type: 'get'});
-  }, [favdispatch]);
+  // useEffect(() => {
+  //   favdispatch({type: 'get'});
+  // }, [favdispatch]);
 
   return (
     <>
@@ -47,7 +47,7 @@ function Favourites(props) {
       /> */}
 
       {/* <NoFilesComponent /> */}
-      <View
+      {/* <View
         style={[Styles.container, {backgroundColor: colors.BackgroundColor}]}>
         {state && (
           <FilesComponent
@@ -56,7 +56,7 @@ function Favourites(props) {
             files={state.files}
           />
         )}
-      </View>
+      </View> */}
     </>
   );
 }

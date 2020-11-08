@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import {DialogTitle} from 'react-native-paper/lib/typescript/src/components/Dialog/DialogTitle';
+// import {DialogTitle} from 'react-native-paper/lib/typescript/src/components/Dialog/DialogTitle';
 
 const Realm = require('realm');
 
@@ -13,7 +13,8 @@ const TaskSchema = {
     taskName: 'string',
     dateTime: 'date',
     isDone: 'int',
-    subTodos: {type: 'list', objectType: 'SUBTODO'},
+    description: 'string',
+    // subTodos: {type: 'list', objectType: 'SUBTODO'},
   },
 };
 
@@ -36,7 +37,7 @@ const SubTaskSchema = {
 //   },
 // };
 
-export default class DataModel extends Component {
+export default class TodoModel extends Component {
   constructor(props) {
     super(props);
     Realm.open();
@@ -46,26 +47,34 @@ export default class DataModel extends Component {
   // Add New Folder
   addTask(taskObj, subTaskObj) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    // taskObj.id = new Date().getTime();
+    console.log('===========main===============');
+    console.log(taskObj);
     realm.write(() => {
-      realm.create('TODO', taskObj, true);
+      realm.create('TASK', taskObj, true);
     });
-    this.addSubTask(taskObj.taskId, subTaskObj);
+    this.addSubTask(taskObj.id, subTaskObj);
   }
 
   // Add New File
   addSubTask(taskId, subTaskObj) {
-    console.log(subTaskObj);
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
-    subTaskObj.taskId = taskId;
-    realm.write(() => {
-      realm.create('SUBTODO', subTaskObj, true);
-    });
+    for (let i = 0; i < subTaskObj.length; i++) {
+      subTaskObj[i].taskId = taskId;
+      realm.write(() => {
+        realm.create('SUBTASK', subTaskObj[i], true);
+      });
+    }
+    console.log('===========sub===============');
+    console.log(subTaskObj);
+
+    console.log('success');
   }
 
   // get only folders
   getTasks() {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
-    const folders = realm.objects('TODO');
+    const folders = realm.objects('TASK');
     return folders;
   }
 
@@ -110,16 +119,19 @@ export default class DataModel extends Component {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
     realm.write(() => {
       const file = realm.objects('SUBTASK').filtered('taskId == $0', subTaskId);
-      file.isDone = status;
+      file[0].isDone = status;
     });
   }
 
   // change subtask status
   changeSubTaskStatusWithId(subTaskId, status) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    const file = realm.objects('SUBTASK').filtered('id == $0', subTaskId);
     realm.write(() => {
-      const file = realm.objects('SUBTASK').filtered('id == $0', subTaskId);
-      file.isDone = status;
+      file[0].isDone = status;
     });
+    const folders = realm.objects('SUBTASK');
+    console.log('[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]', status);
+    console.log(folders);
   }
 }

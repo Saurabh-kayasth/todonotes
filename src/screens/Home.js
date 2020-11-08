@@ -1,21 +1,20 @@
 import React, {useState, useEffect, useReducer, useContext} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  StatusBar,
-} from 'react-native';
-import FoldersComponent from '../components/FoldersComponent';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import AddFolderComponent from '../components/AddFolderComponent';
-import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
+import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {Styles} from '../styles/Styles';
-import {useFocusEffect} from '@react-navigation/native';
-import {IconColor} from '../constants/Theme';
-import {useTheme, Checkbox, ProgressBar} from 'react-native-paper';
+import {
+  useTheme,
+  Checkbox,
+  ProgressBar,
+  FAB,
+  Surface,
+} from 'react-native-paper';
 import {Transition, Transitioning} from 'react-native-reanimated';
-import data from './data';
+// import data from './data';
+import TodoModel from '../Data/TodoModel';
+import {TasksReducer} from '../context/ToDoApp/TasksContext';
+import {FlatList, ScrollView} from 'react-native-gesture-handler';
+import ReadMore from 'react-native-read-more-text';
+
 const transition = (
   <Transition.Together>
     <Transition.In type="fade" durationMs={200} />
@@ -24,134 +23,177 @@ const transition = (
   </Transition.Together>
 );
 
+const SubTask = (props) => {
+  const [checked, setChecked] = React.useState(false);
+
+  useEffect(() => {
+    if (props.data.isDone === 0) {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    }
+  }, [props.data.isDone]);
+
+  const handleCheckBox = (check) => {
+    setChecked(check);
+    const todoModel = new TodoModel();
+    if (check) {
+      todoModel.changeSubTaskStatusWithId(props.data.id, 1);
+    } else {
+      todoModel.changeSubTaskStatusWithId(props.data.id, 0);
+    }
+  };
+
+  return (
+    <View style={styles.subTask}>
+      <Checkbox
+        color="#3cc66b"
+        status={checked ? 'checked' : 'unchecked'}
+        onPress={() => {
+          handleCheckBox(!checked);
+        }}
+      />
+      <Text
+        style={[
+          styles.body,
+          {
+            textDecorationLine: checked ? 'line-through' : 'none',
+            textDecorationStyle: 'solid',
+          },
+        ]}>
+        {props.data.subTaskName}
+      </Text>
+    </View>
+  );
+};
+
 function Home(props) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [state, dispatch] = useReducer(FolderReducer);
+  const [state, dispatch] = useReducer(TasksReducer);
   const {colors} = useTheme();
   const [currentIndex, setCurrentIndex] = React.useState(null);
   const ref = React.useRef();
-  const [checked, setChecked] = React.useState(false);
+  const [subTasks, setSubTasks] = useState([]);
 
   useEffect(() => {
     dispatch({type: 'get'});
   }, [dispatch]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
+  const addTask = () => {
+    props.navigation.navigate('addTask', {dispatch: dispatch});
+  };
 
-      const fetchUser = async () => {
-        try {
-          if (isActive) {
-            dispatch({type: 'get'});
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      };
+  const handleTaskOpen = (taskId, index) => {
+    ref.current.animateNextTransition();
+    setCurrentIndex(index === currentIndex ? null : index);
+    const todoModel = new TodoModel();
+    const subtaskList = todoModel.getSubTasksWithTaskId(taskId);
+    setSubTasks(subtaskList);
+  };
 
-      fetchUser();
+  const _renderTruncatedFooter = (handlePress) => {
+    return (
+      <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
+        Read more
+      </Text>
+    );
+  };
 
-      return () => {
-        isActive = false;
-      };
-    }, []),
-  );
-
-  const addFolder = () => {
-    setModalVisible(true);
+  const _renderRevealedFooter = (handlePress) => {
+    return (
+      <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
+        Show less
+      </Text>
+    );
   };
 
   return (
     <>
-      {/* <DrawerHeaderCompponent
-        header={'Folders'}
-        icon={'menu'}
-        navigation={props.navigation}
-      /> */}
       <View
         style={[Styles.container, {backgroundColor: colors.BackgroundColor}]}>
-        {/* {state && (
-          <FoldersComponent
-            navigation={props.navigation}
-            data={state}
-            dispatch={dispatch}
-          />
-        )}
+        {/* <ScrollView> */}
 
-        <TouchableOpacity style={Styles.btn} onPress={() => addFolder()}>
-          <Icon name="folder-plus" size={25} color={IconColor} />
-        </TouchableOpacity>
-        {modalVisible && (
-          <AddFolderComponent
-            setModalVisible={setModalVisible}
-            dispatch={dispatch}
-          />
-        )} */}
-
-        <Transitioning.View
-          ref={ref}
-          transition={transition}
-          style={styles.container}>
-          {data.map(({bg, color, category, subCategories}, index) => {
-            return (
-              <TouchableOpacity
-                key={category}
-                onPress={() => {
-                  ref.current.animateNextTransition();
-                  setCurrentIndex(index === currentIndex ? null : index);
-                }}
-                style={styles.cardContainer}
-                activeOpacity={0.9}>
-                <View
-                  style={[
-                    styles.card,
-                    {backgroundColor: colors.SecondaryColor},
-                  ]}>
-                  <Text style={[styles.heading, {color: colors.text}]}>
-                    {category}
-                  </Text>
-                  <View style={styles.statusContainer}>
-                    <ProgressBar
-                      styleAttr="Horizontal"
-                      progress={0.5}
-                      color="#3cc66b"
-                      style={styles.progressBar}
-                    />
-                    <Text style={styles.workDoneLabel}>Work Done : 30%</Text>
-                  </View>
-                  {index === currentIndex && (
-                    <View style={styles.subCategoriesList}>
-                      {subCategories.map((subCategory) => (
-                        <View style={styles.subTask} key={subCategory}>
-                          <Checkbox
+        {state && (
+          <Transitioning.View
+            ref={ref}
+            transition={transition}
+            style={styles.container}>
+            <FlatList
+              data={state.tasks}
+              renderItem={({item, index}) => {
+                return (
+                  <Surface
+                    key={item.id.toString()}
+                    style={[
+                      styles.cardContainer,
+                      {backgroundColor: colors.SecondaryColor},
+                    ]}>
+                    <TouchableOpacity
+                      onPress={() => handleTaskOpen(item.id, index)}
+                      activeOpacity={0.9}>
+                      <View
+                        style={[
+                          styles.card,
+                          {backgroundColor: colors.SecondaryColor},
+                        ]}>
+                        <Text style={[styles.heading, {color: colors.text}]}>
+                          {item.taskName}
+                        </Text>
+                        <View style={styles.statusContainer}>
+                          <ProgressBar
+                            styleAttr="Horizontal"
+                            progress={0.559}
                             color="#3cc66b"
-                            status={checked ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                              setChecked(!checked);
-                            }}
+                            style={styles.progressBar}
                           />
-                          <Text
-                            style={[
-                              styles.body,
-                              {
-                                textDecorationLine: checked
-                                  ? 'line-through'
-                                  : 'none',
-                                textDecorationStyle: 'solid',
-                              },
-                            ]}>
-                            {subCategory}
+                          <Text style={styles.workDoneLabel}>
+                            Work Done : 30%
                           </Text>
                         </View>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-        </Transitioning.View>
+                      </View>
+                    </TouchableOpacity>
+                    {index === currentIndex && subTasks && (
+                      <>
+                        {item.description.length > 0 && (
+                          <View style={styles.textContainer}>
+                            <ReadMore
+                              numberOfLines={3}
+                              renderTruncatedFooter={_renderTruncatedFooter}
+                              renderRevealedFooter={_renderRevealedFooter}>
+                              <Text style={styles.description}>
+                                {item.description}
+                              </Text>
+                            </ReadMore>
+                          </View>
+                        )}
+
+                        <View style={styles.subCategoriesList}>
+                          {subTasks.map((subTask) => (
+                            <SubTask
+                              data={subTask}
+                              key={subTask.id.toString()}
+                            />
+                          ))}
+                        </View>
+                      </>
+                    )}
+                  </Surface>
+                );
+              }}
+            />
+            {/* {state.tasks.map((item, index) => {
+              return (
+                
+              );
+            })} */}
+          </Transitioning.View>
+        )}
+        {/* </ScrollView> */}
+        <FAB
+          style={[styles.fab, {backgroundColor: colors.SecondaryColor}]}
+          small
+          icon="plus"
+          onPress={() => addTask()}
+        />
       </View>
     </>
   );
@@ -166,18 +208,22 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     // flexGrow: 1,
-    margin: 10,
+    margin: 12,
     marginBottom: 0,
+    elevation: 4,
+    borderRadius: 5,
+    overflow: 'hidden',
+    paddingBottom: 10,
   },
   card: {
     // flexGrow: 1,
     padding: 10,
-    elevation: 10,
+    // elevation: 10,
     // alignItems: 'center',
     // justifyContent: 'center',
   },
   heading: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: '900',
     textTransform: 'uppercase',
     // letterSpacing: -2,
@@ -193,6 +239,7 @@ const styles = StyleSheet.create({
   subCategoriesList: {
     marginTop: 10,
     borderTopWidth: 0,
+    marginLeft: 10,
     // borderTopColor: '#ff5b77',
     borderLeftWidth: 2,
     borderLeftColor: '#ff5b77',
@@ -212,5 +259,25 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 2,
     backgroundColor: '#ff0000',
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  description: {
+    color: 'grey',
+    // margin: 5,
+    // marginLeft: 10,
+    // marginRight: 10,
+  },
+  textContainer: {
+    padding: 10,
+    flexGrow: 1,
   },
 });

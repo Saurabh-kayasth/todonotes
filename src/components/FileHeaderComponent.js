@@ -8,21 +8,23 @@ import {
 } from 'react-native';
 import {HeadingColor, SecondaryColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useTheme} from 'react-native-paper';
 
 const {width} = Dimensions.get('window');
 
 function FileHeaderCompponent(props) {
+  const {colors} = useTheme();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: colors.SecondaryColor}]}>
       <TouchableOpacity onPress={props.navigation.goBack}>
         <Icon name="arrow-left" size={30} color={HeadingColor} />
       </TouchableOpacity>
       {/* <Icon name={props.icon} size={30} color={HeadingColor} /> */}
       <View style={styles.fileData}>
         <Text style={styles.header}>{props.header}</Text>
-        <Text numberOfLines={1} style={styles.location}>
+        {/* <Text numberOfLines={1} style={styles.location}>
           {props.location}
-        </Text>
+        </Text> */}
       </View>
 
       {/* <View>

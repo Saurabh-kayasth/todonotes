@@ -4,26 +4,26 @@ import HeaderCompponent from '../components/HeaderComponent';
 import FilesComponent from '../components/FilesComponent';
 import AddFileComponent from '../components/AddFileComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {FilesReducer} from '../context/FIlesContext/FilesReducer';
+// import {FilesReducer} from '../context/FIlesContext/FilesReducer';
 import {Styles} from '../styles/Styles';
 import {IconColor} from '../constants/Theme';
 import MainStack from '../router/router';
 
 function Folder(props) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [state, dispatch] = useReducer(FilesReducer);
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [state, dispatch] = useReducer(FilesReducer);
 
-  const addFile = () => {
-    setModalVisible(true);
-  };
+  // const addFile = () => {
+  //   setModalVisible(true);
+  // };
 
-  useEffect(() => {
-    dispatch({type: 'get', payload: props.route.params.item.id});
-  }, [dispatch, props.route.params.item.id]);
+  // useEffect(() => {
+  //   dispatch({type: 'get', payload: props.route.params.item.id});
+  // }, [dispatch, props.route.params.item.id]);
 
   return (
     <View style={Styles.container}>
-      <HeaderCompponent
+      {/* <HeaderCompponent
         header={props.route.params.item.folderName}
         icon={'folder'}
       />
@@ -45,7 +45,7 @@ function Folder(props) {
           folderName={props.route.params.item.folderName}
           dispatch={dispatch}
         />
-      )}
+      )} */}
     </View>
   );
 }
