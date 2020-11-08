@@ -73,10 +73,12 @@ function Home(props) {
   const [currentIndex, setCurrentIndex] = React.useState(null);
   const ref = React.useRef();
   const [subTasks, setSubTasks] = useState([]);
+  const [checked, setChecked] = React.useState(false);
 
   useEffect(() => {
     dispatch({type: 'get'});
-  }, [dispatch]);
+    // console.log(state.tasks);
+  }, []);
 
   const addTask = () => {
     props.navigation.navigate('addTask', {dispatch: dispatch});
@@ -106,6 +108,23 @@ function Home(props) {
   //   );
   // };
 
+  const handleCheckBox = (taskId, check, index) => {
+    // setChecked(check);
+    // let taskList = [...state.tasks];
+    // taskList[index].isDone = check === 0 ? 1 : 0;
+    console.log(check);
+    const todoModel = new TodoModel();
+    // dispatch({type: 'delete', payload: taskId});
+    // todoModel.deleteTaskWithId(taskId);
+    if (check === 1) {
+      dispatch({type: 'update', payload: {id: taskId, isDone: 0}});
+      todoModel.changeMainTaskStatusWithId(taskId, 0);
+    } else {
+      dispatch({type: 'update', payload: {id: taskId, isDone: 1}});
+      todoModel.changeMainTaskStatusWithId(taskId, 1);
+    }
+  };
+
   return (
     <>
       <View
@@ -120,7 +139,7 @@ function Home(props) {
               renderItem={({item, index}) => {
                 return (
                   <Surface
-                    key={item.id.toString()}
+                    key={index}
                     style={[
                       styles.cardContainer,
                       {
@@ -136,19 +155,36 @@ function Home(props) {
                           styles.card,
                           {backgroundColor: colors.SecondaryColor},
                         ]}>
-                        <Text style={[styles.heading, {color: colors.text}]}>
-                          {item.taskName}
-                        </Text>
+                        <View style={styles.headerContainer}>
+                          <View style={{width: '80%'}}>
+                            <Text
+                              style={[styles.heading, {color: colors.text}]}>
+                              {item.taskName}
+                            </Text>
+                          </View>
+                          <View style={{width: '10%'}}>
+                            <Checkbox
+                              color="#3cc66b"
+                              status={
+                                item.isDone === 1 ? 'checked' : 'unchecked'
+                              }
+                              onPress={() => {
+                                handleCheckBox(item.id, item.isDone, index);
+                              }}
+                            />
+                          </View>
+                        </View>
+
                         <View style={styles.statusContainer}>
                           <ProgressBar
                             styleAttr="Horizontal"
-                            progress={0.559}
+                            progress={item.isDone === 1 ? 1 : 0}
                             color="#3cc66b"
                             style={styles.progressBar}
                           />
-                          <Text style={styles.workDoneLabel}>
+                          {/* <Text style={styles.workDoneLabel}>
                             Work Done : 30%
-                          </Text>
+                          </Text> */}
                         </View>
                       </View>
                     </TouchableOpacity>
@@ -274,5 +310,11 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 10,
     flexGrow: 1,
+  },
+  headerContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

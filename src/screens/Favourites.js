@@ -1,11 +1,11 @@
 import React, {useEffect, useReducer} from 'react';
 import {View} from 'react-native';
-import FilesComponent from '../components/FilesComponent';
-// import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
-import {useFocusEffect} from '@react-navigation/native';
-import {Styles} from '../styles/Styles';
-import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
-import NoFilesComponent from '../components/NoFilesComponent';
+// import FilesComponent from '../components/FilesComponent';
+// // import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
+// import {useFocusEffect} from '@react-navigation/native';
+// import {Styles} from '../styles/Styles';
+// import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
+// import NoFilesComponent from '../components/NoFilesComponent';
 import {useTheme, Checkbox, ProgressBar} from 'react-native-paper';
 
 function Favourites(props) {

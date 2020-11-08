@@ -18,6 +18,50 @@ export const TasksReducer = (state = initialState, action) => {
       // action.payload.id = state.folders.length + 1;
       return {...state, tasks: [...state.tasks, action.payload]};
     }
+    case 'update': {
+      // console.log('update folder..............', action.payload);
+      // action.payload.id = state.folders.length + 1;
+      console.log('+++++++++++++++++++++++++');
+      const index = state.tasks.findIndex(
+        (todo) => todo.id === action.payload.id,
+      );
+      const newArray = [...state.tasks];
+      // console.log(newArray[index]);
+      newArray[index].isDone = action.payload.isDone;
+      // const tt = {
+      //   ...state,
+      //   tasks: state.tasks.map((item) =>
+      //     item.id === action.payload.id
+      //       ? {...state, isDone: action.payload.isDone}
+      //       : {...state.tasks},
+      //   ),
+      // };
+      // task.id === action.payload.id
+      //   ? {...task, isDone: action.payload.isDone}
+      //   : task,
+
+      // let temp = [...state.tasks];
+      // for (let i = 0; i < temp.length; i++) {
+      //   if (temp[i].id === action.payload.id) {
+      //     temp[i].isDone = action.payload.isDone;
+      //   }
+      // }
+      // console.log(newArray);
+      return {
+        ...state, //copying the orignal state
+        tasks: newArray, //reassingning todos to new array
+      };
+      // {
+      //   ...state,
+      //   tasks: [
+      //     ...state.tasks,
+      //     {
+      //       ...state.tasks[action.payload.id],
+      //       isDone: action.payload.isDone,
+      //     },
+      //   ],
+      // };
+    }
     case 'delete': {
       console.log('in action ', action.payload);
       return {

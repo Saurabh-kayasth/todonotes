@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useReducer} from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import HeaderCompponent from '../components/HeaderComponent';
-import FilesComponent from '../components/FilesComponent';
-import AddFileComponent from '../components/AddFileComponent';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+// import HeaderCompponent from '../components/HeaderComponent';
+// import FilesComponent from '../components/FilesComponent';
+// import AddFileComponent from '../components/AddFileComponent';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // import {FilesReducer} from '../context/FIlesContext/FilesReducer';
 import {Styles} from '../styles/Styles';
 import {IconColor} from '../constants/Theme';

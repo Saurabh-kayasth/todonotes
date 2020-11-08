@@ -1,11 +1,11 @@
 import React, {useEffect, useReducer} from 'react';
 import {View} from 'react-native';
-import FilesComponent from '../components/FilesComponent';
-// import {ShedFilesReducer} from '../context/ShedFilesContext/ShedFilesReducer';
-import {useFocusEffect} from '@react-navigation/native';
-import {Styles} from '../styles/Styles';
-import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
-import NoFilesComponent from '../components/NoFilesComponent';
+// import FilesComponent from '../components/FilesComponent';
+// // import {ShedFilesReducer} from '../context/ShedFilesContext/ShedFilesReducer';
+// import {useFocusEffect} from '@react-navigation/native';
+// import {Styles} from '../styles/Styles';
+// import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
+// import NoFilesComponent from '../components/NoFilesComponent';
 
 function Sheduled(props) {
   // const [state, sheddispatch] = useReducer(ShedFilesReducer);

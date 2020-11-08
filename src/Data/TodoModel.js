@@ -107,9 +107,9 @@ export default class TodoModel extends Component {
   // change main task status
   changeMainTaskStatusWithId(taskId, status) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    const file = realm.objects('TASK').filtered('id == $0', taskId);
     realm.write(() => {
-      const file = realm.objects('TASK').filtered('id == $0', taskId);
-      file.isDone = status;
+      file[0].isDone = status;
     });
     this.changeAllSubTaskStatusWithId(taskId, status);
   }
@@ -117,9 +117,11 @@ export default class TodoModel extends Component {
   // change All subtask status
   changeAllSubTaskStatusWithId(subTaskId, status) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    const file = realm.objects('SUBTASK').filtered('taskId == $0', subTaskId);
     realm.write(() => {
-      const file = realm.objects('SUBTASK').filtered('taskId == $0', subTaskId);
-      file[0].isDone = status;
+      for (let i = 0; i < file.length; i++) {
+        file[i].isDone = status;
+      }
     });
   }
 
