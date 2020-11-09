@@ -24,6 +24,7 @@ const AddTask = (props) => {
   const [validation, updateValidation] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubTask, setIsSubTask] = useState(false);
+  const [taskId, setTaskId] = useState(new Date().getTime());
 
   const onSubTaskTitleChange = (index, e) => {
     console.log(e);
@@ -56,6 +57,7 @@ const AddTask = (props) => {
         subTaskName: '',
         dateTime: new Date(),
         isDone: 0,
+        taskId: taskId,
       },
     ]);
 
@@ -70,20 +72,17 @@ const AddTask = (props) => {
   const handleSubmit = () => {
     setSubmitted(true);
     const tasks = {
-      id: new Date().getTime(),
+      id: taskId,
       taskName: taskName,
       dateTime: new Date(),
       isDone: 0,
       description: description,
+      subTodos: subTasks,
     };
-    console.log('-------------------');
-    console.log(tasks);
-    console.log(subTasks);
-    console.log('xxxxxxxxxxxxxxxxxxxxx');
     const isValid = checkValidation();
     if (isValid && taskName.length > 0) {
       const todoModel = new TodoModel();
-      todoModel.addTask(tasks, subTasks);
+      todoModel.addTask(tasks);
       props.route.params.dispatch({type: 'add', payload: tasks});
       props.navigation.goBack();
     }

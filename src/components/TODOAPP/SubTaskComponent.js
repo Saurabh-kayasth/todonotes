@@ -17,6 +17,7 @@ const SubTaskComponent = (props) => {
   const handleCheckBox = (check) => {
     setChecked(check);
     const todoModel = new TodoModel();
+    props.changeCurrentId(props.data.taskId);
     if (check) {
       todoModel.changeSubTaskStatusWithId(props.data.id, 1);
     } else {

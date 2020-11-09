@@ -23,18 +23,16 @@ function Home(props) {
   const [currentIndex, setCurrentIndex] = React.useState(null);
   const ref = React.useRef();
   const [subTasks, setSubTasks] = useState([]);
-  const [checkAll, setCheckAll] = useState();
+  // const [checkAll, setCheckAll] = useState();
   const [currentId, setCurrentId] = useState();
 
   useEffect(() => {
+    console.log('sssssssssssssssssssssssssssssssssssssss');
     dispatch({type: 'get'});
   }, [currentId]);
 
   useEffect(() => {
     console.log('<<<<<<<<<<<>>>>>>>>>>>>>>>>>>');
-    // console.log(checkAll);
-
-    // handleTaskOpen();
   }, [currentId]);
 
   const addTask = () => {
@@ -55,9 +53,15 @@ function Home(props) {
     ref.current.animateNextTransition();
     setCurrentIndex(index === currentIndex ? null : index);
     const todoModel = new TodoModel();
-    // setCurrentId(taskId);
+    setCurrentId(taskId);
     const subtaskList = todoModel.getSubTasksWithTaskId(taskId);
     setSubTasks(subtaskList);
+  };
+
+  const changeCurrentId = (taskId) => {
+    console.log('=+++++++++++++++++++++++++++++');
+    setCurrentId(taskId);
+    dispatch({type: 'get'});
   };
 
   return (
@@ -105,10 +109,11 @@ function Home(props) {
                         )}
 
                         <View style={styles.subCategoriesList}>
-                          {subTasks.map((subTask) => (
+                          {item.subTodos.map((subTask) => (
                             <SubTaskComponent
                               data={subTask}
                               key={subTask.id.toString()}
+                              changeCurrentId={changeCurrentId}
                             />
                           ))}
                         </View>

@@ -45,7 +45,7 @@ export default class TodoModel extends Component {
     // Realm.deleteFile();
   }
   // Add New Folder
-  addTask(taskObj, subTaskObj) {
+  addTask(taskObj) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
     // taskObj.id = new Date().getTime();
     console.log('===========main===============');
@@ -53,7 +53,7 @@ export default class TodoModel extends Component {
     realm.write(() => {
       realm.create('TASK', taskObj, true);
     });
-    this.addSubTask(taskObj.id, subTaskObj);
+    // this.addSubTask(taskObj.id, subTaskObj);
   }
 
   // Add New File
