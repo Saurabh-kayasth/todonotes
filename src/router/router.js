@@ -1,23 +1,13 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Home from '../screens/Home';
-import Favourites from '../screens/Favourites';
-import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
-
-// import Pdf from '../screens/Pdf';
-// import Main from '../screens/Main';
-import {
-  ACTIVE_TINT_COLOR,
-  IconColor,
-  INACTIVE_TINT_COLOR,
-  SecondaryColor,
-} from '../constants/Theme';
 import {useTheme} from 'react-native-paper';
 import AddTask from '../screens/AddTask';
+import Notes from '../screens/Notes';
+import Settings from '../screens/Settings';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -25,13 +15,12 @@ function Tabs() {
   const {colors} = useTheme();
   return (
     <Tab.Navigator
-      initialRouteName="Folder"
+      initialRouteName="Home"
       tabBarOptions={{
         activeTintColor: colors.ACTIVE_TINT_COLOR,
         inactiveTintColor: colors.INACTIVE_TINT_COLOR,
         showLabel: false,
         showIcon: true,
-
         style: {
           backgroundColor: colors.SecondaryColor,
           height: 60,
@@ -52,7 +41,7 @@ function Tabs() {
         },
       }}>
       <Tab.Screen
-        name="Folder"
+        name="Home"
         component={Home}
         options={{
           tabBarIcon: ({focused, color}) => (
@@ -66,8 +55,8 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Favourites"
-        component={Favourites}
+        name="Notes"
+        component={Notes}
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon
@@ -80,8 +69,8 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Sheduled"
-        component={Sheduled}
+        name="Settings"
+        component={Settings}
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon

@@ -14,7 +14,7 @@ const TaskSchema = {
     dateTime: 'date',
     isDone: 'int',
     description: 'string',
-    // subTodos: {type: 'list', objectType: 'SUBTODO'},
+    subTodos: {type: 'list', objectType: 'SUBTASK'},
   },
 };
 
@@ -86,10 +86,13 @@ export default class TodoModel extends Component {
   }
 
   // number of files inside folder
-  getNumberOfFilesFromFolderId(folderId) {
+  getNumberOfSubTasksFromTaskId(folderId) {
     let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
-    const files = realm.objects('SUBTASK').filtered('taskId = $0', folderId);
-    return files.length;
+    const tasks = realm.objects('SUBTASK').filtered('taskId = $0', folderId);
+    const doneTasks = realm
+      .objects('SUBTASK')
+      .filtered('taskId = $0 AND isDone = $1', folderId, 1);
+    return [tasks.length, doneTasks.length];
   }
 
   // delete folder and files inside it
@@ -101,6 +104,14 @@ export default class TodoModel extends Component {
       const files = realm.objects('SUBTASK').filtered('taskId == $0', folderId);
       realm.delete(folder);
       realm.delete(files);
+    });
+  }
+
+  changeOnlyMainTaskStatusWithId(taskId, status) {
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    const file = realm.objects('TASK').filtered('id == $0', taskId);
+    realm.write(() => {
+      file[0].isDone = status;
     });
   }
 
@@ -132,8 +143,5 @@ export default class TodoModel extends Component {
     realm.write(() => {
       file[0].isDone = status;
     });
-    const folders = realm.objects('SUBTASK');
-    console.log('[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]', status);
-    console.log(folders);
   }
 }
