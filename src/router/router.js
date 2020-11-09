@@ -35,7 +35,7 @@ function Tabs() {
         style: {
           backgroundColor: colors.SecondaryColor,
           height: 60,
-          elevation: 5,
+          elevation: 15,
         },
         indicatorStyle: {
           height: 0,

@@ -1,19 +1,13 @@
 import React, {useState, useEffect, useReducer} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {Styles} from '../styles/Styles';
-import {
-  useTheme,
-  Checkbox,
-  ProgressBar,
-  FAB,
-  Surface,
-} from 'react-native-paper';
+import {useTheme, FAB, Surface} from 'react-native-paper';
 import {Transition, Transitioning} from 'react-native-reanimated';
-// import data from './data';
 import TodoModel from '../Data/TodoModel';
 import {TasksReducer} from '../context/ToDoApp/TasksContext';
 import {FlatList} from 'react-native-gesture-handler';
-// import ReadMore from 'react-native-read-more-text';
+import MainTaskComponent from '../components/TODOAPP/MainTaskComponent';
+import SubTaskComponent from '../components/TODOAPP/SubTaskComponent';
 
 const transition = (
   <Transition.Together>
@@ -23,106 +17,47 @@ const transition = (
   </Transition.Together>
 );
 
-const SubTask = (props) => {
-  const [checked, setChecked] = React.useState(false);
-
-  useEffect(() => {
-    if (props.data.isDone === 0) {
-      setChecked(false);
-    } else {
-      setChecked(true);
-    }
-  }, [props.data.isDone]);
-
-  const handleCheckBox = (check) => {
-    setChecked(check);
-    const todoModel = new TodoModel();
-    if (check) {
-      todoModel.changeSubTaskStatusWithId(props.data.id, 1);
-    } else {
-      todoModel.changeSubTaskStatusWithId(props.data.id, 0);
-    }
-  };
-
-  return (
-    <View style={styles.subTask}>
-      <Checkbox
-        color="#3cc66b"
-        status={checked ? 'checked' : 'unchecked'}
-        onPress={() => {
-          handleCheckBox(!checked);
-        }}
-      />
-      <Text
-        style={[
-          styles.body,
-          {
-            textDecorationLine: checked ? 'line-through' : 'none',
-            textDecorationStyle: 'solid',
-          },
-        ]}>
-        {props.data.subTaskName}
-      </Text>
-    </View>
-  );
-};
-
 function Home(props) {
   const [state, dispatch] = useReducer(TasksReducer);
   const {colors} = useTheme();
   const [currentIndex, setCurrentIndex] = React.useState(null);
   const ref = React.useRef();
   const [subTasks, setSubTasks] = useState([]);
-  const [checked, setChecked] = React.useState(false);
+  const [checkAll, setCheckAll] = useState();
+  const [currentId, setCurrentId] = useState();
 
   useEffect(() => {
     dispatch({type: 'get'});
-    // console.log(state.tasks);
   }, []);
+
+  // useEffect(() => {
+  //   console.log('<<<<<<<<<<<>>>>>>>>>>>>>>>>>>');
+  //   // console.log(checkAll);
+
+  //   // handleTaskOpen();
+  // }, [currentId]);
 
   const addTask = () => {
     props.navigation.navigate('addTask', {dispatch: dispatch});
+  };
+
+  const handleTaskOpenLater = (taskId, index) => {
+    console.log(taskId, index);
+    // ref.current.animateNextTransition();
+    setCurrentIndex(index !== currentIndex ? null : index);
+    const todoModel = new TodoModel();
+    // setCurrentId(taskId);
+    const subtaskList = todoModel.getSubTasksWithTaskId(taskId);
+    setSubTasks(subtaskList);
   };
 
   const handleTaskOpen = (taskId, index) => {
     ref.current.animateNextTransition();
     setCurrentIndex(index === currentIndex ? null : index);
     const todoModel = new TodoModel();
+    // setCurrentId(taskId);
     const subtaskList = todoModel.getSubTasksWithTaskId(taskId);
     setSubTasks(subtaskList);
-  };
-
-  // const _renderTruncatedFooter = (handlePress) => {
-  //   return (
-  //     <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
-  //       Read more
-  //     </Text>
-  //   );
-  // };
-
-  // const _renderRevealedFooter = (handlePress) => {
-  //   return (
-  //     <Text style={{color: 'skyblue', marginTop: 5}} onPress={handlePress}>
-  //       Show less
-  //     </Text>
-  //   );
-  // };
-
-  const handleCheckBox = (taskId, check, index) => {
-    // setChecked(check);
-    // let taskList = [...state.tasks];
-    // taskList[index].isDone = check === 0 ? 1 : 0;
-    console.log(check);
-    const todoModel = new TodoModel();
-    // dispatch({type: 'delete', payload: taskId});
-    // todoModel.deleteTaskWithId(taskId);
-    if (check === 1) {
-      dispatch({type: 'update', payload: {id: taskId, isDone: 0}});
-      todoModel.changeMainTaskStatusWithId(taskId, 0);
-    } else {
-      dispatch({type: 'update', payload: {id: taskId, isDone: 1}});
-      todoModel.changeMainTaskStatusWithId(taskId, 1);
-    }
   };
 
   return (
@@ -136,12 +71,14 @@ function Home(props) {
             style={styles.container}>
             <FlatList
               data={state.tasks}
+              keyExtractor={(item, index) => item.id}
               renderItem={({item, index}) => {
                 return (
                   <Surface
                     key={index}
                     style={[
                       styles.cardContainer,
+                      // eslint-disable-next-line react-native/no-inline-styles
                       {
                         backgroundColor: colors.SecondaryColor,
                         marginBottom: index + 1 === state.tasks.length ? 20 : 0,
@@ -150,62 +87,25 @@ function Home(props) {
                     <TouchableOpacity
                       onPress={() => handleTaskOpen(item.id, index)}
                       activeOpacity={0.9}>
-                      <View
-                        style={[
-                          styles.card,
-                          {backgroundColor: colors.SecondaryColor},
-                        ]}>
-                        <View style={styles.headerContainer}>
-                          <View style={{width: '80%'}}>
-                            <Text
-                              style={[styles.heading, {color: colors.text}]}>
-                              {item.taskName}
-                            </Text>
-                          </View>
-                          <View style={{width: '10%'}}>
-                            <Checkbox
-                              color="#3cc66b"
-                              status={
-                                item.isDone === 1 ? 'checked' : 'unchecked'
-                              }
-                              onPress={() => {
-                                handleCheckBox(item.id, item.isDone, index);
-                              }}
-                            />
-                          </View>
-                        </View>
-
-                        <View style={styles.statusContainer}>
-                          <ProgressBar
-                            styleAttr="Horizontal"
-                            progress={item.isDone === 1 ? 1 : 0}
-                            color="#3cc66b"
-                            style={styles.progressBar}
-                          />
-                          {/* <Text style={styles.workDoneLabel}>
-                            Work Done : 30%
-                          </Text> */}
-                        </View>
-                      </View>
+                      <MainTaskComponent
+                        item={item}
+                        index={index}
+                        handleTaskOpen={handleTaskOpenLater}
+                      />
                     </TouchableOpacity>
                     {index === currentIndex && subTasks && (
                       <>
                         {item.description.length > 0 && (
                           <View style={styles.textContainer}>
-                            {/* <ReadMore
-                              numberOfLines={3}
-                              renderTruncatedFooter={_renderTruncatedFooter}
-                              renderRevealedFooter={_renderRevealedFooter}> */}
                             <Text style={styles.description}>
                               {item.description}
                             </Text>
-                            {/* </ReadMore> */}
                           </View>
                         )}
 
                         <View style={styles.subCategoriesList}>
                           {subTasks.map((subTask) => (
-                            <SubTask
+                            <SubTaskComponent
                               data={subTask}
                               key={subTask.id.toString()}
                             />
@@ -235,61 +135,21 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
   },
   cardContainer: {
-    // flexGrow: 1,
     margin: 12,
     marginBottom: 0,
-    elevation: 4,
+    elevation: 10,
     borderRadius: 5,
     overflow: 'hidden',
     paddingBottom: 10,
-  },
-  card: {
-    // flexGrow: 1,
-    padding: 10,
-    // elevation: 10,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-  heading: {
-    fontSize: 22,
-    fontWeight: '900',
-    textTransform: 'uppercase',
-    // letterSpacing: -2,
-    color: '#fff',
-  },
-  body: {
-    fontSize: 20,
-    lineHeight: 20 * 1.5,
-    paddingLeft: 10,
-    color: '#adadad',
-    // textAlign: 'center',
   },
   subCategoriesList: {
     marginTop: 10,
     borderTopWidth: 0,
     marginLeft: 10,
-    // borderTopColor: '#ff5b77',
     borderLeftWidth: 2,
     borderLeftColor: '#ff5b77',
-  },
-  subTask: {
-    flexDirection: 'row',
-    paddingLeft: 10,
-    alignItems: 'center',
-  },
-  statusContainer: {
-    paddingTop: 10,
-  },
-  workDoneLabel: {
-    color: 'grey',
-    marginTop: 5,
-  },
-  progressBar: {
-    height: 2,
-    backgroundColor: '#ff0000',
   },
   fab: {
     position: 'absolute',
@@ -303,18 +163,9 @@ const styles = StyleSheet.create({
   },
   description: {
     color: 'grey',
-    // margin: 5,
-    // marginLeft: 10,
-    // marginRight: 10,
   },
   textContainer: {
     padding: 10,
     flexGrow: 1,
-  },
-  headerContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 });
