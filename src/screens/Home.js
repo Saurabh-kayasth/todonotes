@@ -28,14 +28,14 @@ function Home(props) {
 
   useEffect(() => {
     dispatch({type: 'get'});
-  }, []);
+  }, [currentId]);
 
-  // useEffect(() => {
-  //   console.log('<<<<<<<<<<<>>>>>>>>>>>>>>>>>>');
-  //   // console.log(checkAll);
+  useEffect(() => {
+    console.log('<<<<<<<<<<<>>>>>>>>>>>>>>>>>>');
+    // console.log(checkAll);
 
-  //   // handleTaskOpen();
-  // }, [currentId]);
+    // handleTaskOpen();
+  }, [currentId]);
 
   const addTask = () => {
     props.navigation.navigate('addTask', {dispatch: dispatch});
@@ -46,7 +46,7 @@ function Home(props) {
     // ref.current.animateNextTransition();
     setCurrentIndex(index !== currentIndex ? null : index);
     const todoModel = new TodoModel();
-    // setCurrentId(taskId);
+    setCurrentId(taskId);
     const subtaskList = todoModel.getSubTasksWithTaskId(taskId);
     setSubTasks(subtaskList);
   };
@@ -91,6 +91,7 @@ function Home(props) {
                         item={item}
                         index={index}
                         handleTaskOpen={handleTaskOpenLater}
+                        dispatch={dispatch}
                       />
                     </TouchableOpacity>
                     {index === currentIndex && subTasks && (

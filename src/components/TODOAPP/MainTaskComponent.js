@@ -1,7 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {useTheme, Checkbox, ProgressBar} from 'react-native-paper';
+import {
+  useTheme,
+  Checkbox,
+  ProgressBar,
+  TouchableRipple,
+} from 'react-native-paper';
 import TodoModel from '../../Data/TodoModel';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const MainTaskComponent = (props) => {
   const {colors} = useTheme();
@@ -34,6 +40,12 @@ const MainTaskComponent = (props) => {
     }
   };
 
+  const deleteTask = (taskId) => {
+    const todoModel = new TodoModel();
+    props.dispatch({type: 'delete', payload: taskId});
+    todoModel.deleteTaskWithId(taskId);
+  };
+
   return (
     <View style={[styles.card, {backgroundColor: colors.SecondaryColor}]}>
       <View style={styles.headerContainer}>
@@ -42,7 +54,13 @@ const MainTaskComponent = (props) => {
             {props.item.taskName}
           </Text>
         </View>
-        <View style={{width: '10%'}}>
+        <View
+          style={{
+            width: '20%',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <Checkbox
             color="#3cc66b"
             status={checked ? 'checked' : 'unchecked'}
@@ -50,6 +68,12 @@ const MainTaskComponent = (props) => {
               handleCheckBox(props.item.id, !checked);
             }}
           />
+          <TouchableRipple
+            style={[styles.deleteBtn]}
+            onPress={() => deleteTask(props.item.id)}
+            rippleColor="rgba(0, 0, 0, .32)">
+            <Icon name="delete-outline" color="#ff0000" size={27} />
+          </TouchableRipple>
         </View>
       </View>
 
