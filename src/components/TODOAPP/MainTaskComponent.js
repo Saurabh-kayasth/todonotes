@@ -81,11 +81,9 @@ const MainTaskComponent = (props) => {
           <Dialog.Content>
             <Paragraph>Are you sure you want to delete this item?</Paragraph>
           </Dialog.Content>
-          <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+          <View style={styles.dialogActions}>
             <Dialog.Actions>
-              <Button onPress={onlyHide} color="#fff">
-                Cancel
-              </Button>
+              <Button onPress={onlyHide}>Cancel</Button>
             </Dialog.Actions>
             <Dialog.Actions>
               <Button onPress={hideDialog} color="#ff0000">
@@ -167,6 +165,10 @@ const styles = StyleSheet.create({
     width: '10%',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  dialogActions: {
+    flexDirection: 'row',
     justifyContent: 'flex-end',
   },
 });
