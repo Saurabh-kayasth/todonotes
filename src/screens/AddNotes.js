@@ -1,29 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, ToastAndroid} from 'react-native';
-// import FileHeaderComponent from '../components/FileHeaderComponent';
-import {
-  TextInput,
-  useTheme,
-  Text,
-  TouchableRipple,
-  Surface,
-  Button,
-} from 'react-native-paper';
+import {TextInput, useTheme, Text, TouchableRipple} from 'react-native-paper';
 import {Styles} from '../styles/Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import {ScrollPager} from 'react-native-tab-view';
 import {ScrollView} from 'react-native-gesture-handler';
-import TodoModel from '../Data/TodoModel';
 
 const AddNotes = (props) => {
-  //   console.log(props.route.params);
   const {colors} = useTheme();
   const [noteName, setnoteName] = useState('');
   const [description, setDescription] = useState('');
   const [validation, updateValidation] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [noteId, setnoteId] = useState(new Date().getTime());
-  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleSubmit = () => {
     setSubmitted(true);
@@ -36,21 +24,12 @@ const AddNotes = (props) => {
     };
     const isValid = checkValidation();
     if ((isValid && noteName.length > 0) || description.length > 0) {
-      //   props.route.params.dispatch({type: 'add', payload: notes});
-      // const todoModel = new TodoModel();
-      // if (isEditMode) {
-      //   todoModel.updateNotes(notes);
-      // } else {
-      // todoModel.addNotes(notes);
-      // }
       ToastAndroid.showWithGravity(
         'Notes saved!',
         ToastAndroid.SHORT,
         ToastAndroid.TOP,
       );
       props.route.params.addNotes(notes);
-
-      //   props.navigation.goBack();
     }
   };
 
@@ -69,15 +48,10 @@ const AddNotes = (props) => {
   };
 
   useEffect(() => {
-    //
-    // if (props.route.params !== undefined) {
-    //   console.log('==============================');
-    // }
     if (
       props.route.params.item !== undefined &&
       props.route.params.item !== null
     ) {
-      console.log('--------------------------');
       const data = props.route.params.item;
       setnoteId(data.id);
       setnoteName(data.noteName);
@@ -96,10 +70,8 @@ const AddNotes = (props) => {
         <Text style={styles.error}>Title or description can't be empty!</Text>
       )}
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* <FileHeaderComponent header={'Add To Do'} navigation={props.navigation} /> */}
         <TextInput
           mode="flat"
-          //   label="Title"
           value={noteName}
           placeholder="Title"
           onChangeText={(text) => setnoteName(text)}
@@ -116,7 +88,6 @@ const AddNotes = (props) => {
 
         <TextInput
           mode="flat"
-          //   label="Description"
           value={description}
           placeholder="Description..."
           onChangeText={(text) => setDescription(text)}
@@ -130,29 +101,10 @@ const AddNotes = (props) => {
       </ScrollView>
 
       <View style={styles.btnContainer}>
-        {/* <TouchableRipple
-          style={[styles.saveBtn, {backgroundColor: colors.SecondaryColor}]}
-          rippleColor="rgba(0, 0, 0, .5)"
-          onPress={handleEdit}
-          // onPress={() => addnote()}
-        >
-          <>
-            <Icon
-              name="pencil"
-              size={25}
-              color={colors.IconColor}
-              style={{marginRight: 10}}
-            />
-            <Text>EDIT</Text>
-          </>
-        </TouchableRipple> */}
         <TouchableRipple
           style={[styles.saveBtn]}
           rippleColor="rgba(0, 0, 0, .5)"
-          onPress={handleSubmit}
-
-          // onPress={() => addnote()}
-        >
+          onPress={handleSubmit}>
           <>
             <Icon
               name="check"

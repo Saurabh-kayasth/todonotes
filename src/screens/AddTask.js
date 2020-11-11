@@ -1,22 +1,18 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
-// import FileHeaderComponent from '../components/FileHeaderComponent';
 import {
   TextInput,
   useTheme,
   Text,
   TouchableRipple,
   Surface,
-  Button,
 } from 'react-native-paper';
 import {Styles} from '../styles/Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import {ScrollPager} from 'react-native-tab-view';
 import {ScrollView} from 'react-native-gesture-handler';
 import TodoModel from '../Data/TodoModel';
 
 const AddTask = (props) => {
-  //   console.log(props.route.params);
   const {colors} = useTheme();
   const [taskName, setTaskName] = useState('');
   const [description, setDescription] = useState('');
@@ -215,7 +211,6 @@ export default AddTask;
 
 const styles = StyleSheet.create({
   input: {
-    // height: 50,
     width: '100%',
     marginBottom: 5,
   },
@@ -244,10 +239,6 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     height: 50,
-    // position: 'absolute',
-    // bottom: 30,
-    // left: 100,
-    // right: 100,
     borderRadius: 10,
     elevation: 5,
   },
@@ -265,10 +256,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   deleteBtn: {
-    // width: '15%',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: '#ff5b77',
   },
   error: {
     color: '#ff0000',

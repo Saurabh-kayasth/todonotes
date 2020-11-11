@@ -3,7 +3,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Home from '../screens/Home';
-import Folder from '../screens/Folder';
 import {useTheme} from 'react-native-paper';
 import AddTask from '../screens/AddTask';
 import Notes from '../screens/Notes';
@@ -96,16 +95,6 @@ export default function MainStack() {
       <Stack.Screen
         component={Tabs}
         name="maintabs"
-        options={{
-          headerShown: false,
-          headerStyle: {
-            backgroundColor: colors.SecondaryColor,
-          },
-        }}
-      />
-      <Stack.Screen
-        component={Folder}
-        name="folder"
         options={{
           headerShown: false,
           headerStyle: {

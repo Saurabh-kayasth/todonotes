@@ -23,16 +23,14 @@ function Home(props) {
   const [currentIndex, setCurrentIndex] = React.useState(null);
   const ref = React.useRef();
   const [subTasks, setSubTasks] = useState([]);
-  // const [checkAll, setCheckAll] = useState();
   const [currentId, setCurrentId] = useState();
 
   useEffect(() => {
-    console.log('sssssssssssssssssssssssssssssssssssssss');
     dispatch({type: 'get'});
   }, [currentId]);
 
   useEffect(() => {
-    console.log('<<<<<<<<<<<>>>>>>>>>>>>>>>>>>');
+    //
   }, [currentId]);
 
   const addTask = () => {
@@ -40,8 +38,6 @@ function Home(props) {
   };
 
   const handleTaskOpenLater = (taskId, index) => {
-    console.log(taskId, index);
-    // ref.current.animateNextTransition();
     setCurrentIndex(index !== currentIndex ? null : index);
     const todoModel = new TodoModel();
     setCurrentId(taskId);
@@ -59,7 +55,6 @@ function Home(props) {
   };
 
   const changeCurrentId = (taskId) => {
-    console.log('=+++++++++++++++++++++++++++++');
     setCurrentId(taskId);
     dispatch({type: 'get'});
   };

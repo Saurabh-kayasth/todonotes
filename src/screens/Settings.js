@@ -1,33 +1,15 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {
-  View,
-  Switch,
-  Text,
-  StyleSheet,
-  Image,
-  // TouchableHighlight,
-  // TouchableWithoutFeedback,
-} from 'react-native';
-// import HeaderCompponent from '../components/HeaderComponent';
-import {
-  // BackgroundColor,
-  BorderColor,
-  // HeadingColor,
-  // IconColor,
-  PlaceholderColor,
-  // SecondaryColor,
-} from '../constants/Theme';
+import React, {useEffect, useState} from 'react';
+import {View, Switch, Text, StyleSheet, Image} from 'react-native';
+import {BorderColor, PlaceholderColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LAZY_LOAD_KEY, THEME_KEY} from '../constants/Constants';
+import {THEME_KEY} from '../constants/Constants';
 import {useTheme} from 'react-native-paper';
 import {AuthContext} from '../context/AuthContext';
 
 function Settings(props) {
   const [switchValue, setSwitchValue] = useState();
-  // const [lazyLoad, setLazyLoad] = useState('');
   const {colors} = useTheme();
-  const paperTheme = useTheme();
   const {toggleTheme} = React.useContext(AuthContext);
 
   const handleToggle = async () => {
@@ -40,12 +22,6 @@ function Settings(props) {
 
     setSwitchValue(!switchValue);
   };
-
-  // const onThemeSelection = async (themeName) => {
-  //   await AsyncStorage.setItem(THEME_KEY, themeName);
-  //   themeDispatch({type: 'update'});
-  //   setTheme(themeName);
-  // };
 
   useEffect(() => {
     getTheme();
@@ -67,9 +43,7 @@ function Settings(props) {
 
   return (
     <View style={[styles.container, {backgroundColor: colors.BackgroundColor}]}>
-      {/* <HeaderCompponent header={'Settings'} icon={'cog'} /> */}
-
-      {/* LAZY LOADING */}
+      {/* THEME */}
       <View
         style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
         <View style={styles.optionContainer}>
@@ -88,10 +62,8 @@ function Settings(props) {
         </View>
       </View>
 
-      {/* LAZY LOADING */}
-      <Text style={{marginLeft: 15, color: '#b2b2b7', marginTop: 10}}>
-        Help
-      </Text>
+      {/* HELP */}
+      <Text style={styles.helpText}>Help</Text>
       <View
         style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
         <Text style={[styles.heading, {color: colors.text}]}>
@@ -167,5 +139,10 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 20,
     marginBottom: 10,
+  },
+  helpText: {
+    marginLeft: 15,
+    color: '#b2b2b7',
+    marginTop: 10,
   },
 });

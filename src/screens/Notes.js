@@ -39,7 +39,6 @@ const Notes = (props) => {
   const handleLongPress = (notesId) => {
     const arr = [...idList];
     let index = arr.indexOf(notesId);
-    console.log(index);
     if (index !== -1) {
       arr.splice(index, 1);
     } else {
@@ -50,7 +49,6 @@ const Notes = (props) => {
     } else {
       setInit(false);
     }
-    console.log(arr);
     setIdList(arr);
   };
 
@@ -59,7 +57,6 @@ const Notes = (props) => {
   };
 
   const handleDelete = () => {
-    console.log(idList);
     if (idList.length > 0) {
       const notesLst = [...notesList];
       for (let i = 0; i < idList.length; i++) {
@@ -76,8 +73,6 @@ const Notes = (props) => {
       const todoModel = new TodoModel();
       todoModel.deleteNotes(idList);
       setIdList([]);
-      console.log('-+-+-+-+-+-+-+-+-+-+------------');
-      console.log(notesLst);
       setNotesLst(notesLst);
       setInit(false);
     }
@@ -97,9 +92,6 @@ const Notes = (props) => {
   };
 
   const addNotes = (notesObj) => {
-    console.log('++++++++++++++++++++++');
-    console.log(notesObj);
-
     const notesArr = [...notesList];
     if (notesArr.length === 0) {
       notesArr.push(notesObj);
