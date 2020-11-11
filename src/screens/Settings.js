@@ -4,7 +4,7 @@ import {BorderColor, PlaceholderColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {THEME_KEY} from '../constants/Constants';
-import {useTheme} from 'react-native-paper';
+import {FAB, useTheme} from 'react-native-paper';
 import {AuthContext} from '../context/AuthContext';
 
 function Settings(props) {
@@ -69,7 +69,15 @@ function Settings(props) {
         <Text style={[styles.heading, {color: colors.text}]}>
           Add Notes or Tasks
         </Text>
-        <Image style={styles.img} source={require('../assets/F1.png')} />
+        <View
+          style={[
+            styles.addContainer,
+            {backgroundColor: colors.BackgroundColor},
+          ]}>
+          <View style={styles.fabBtn}>
+            <Text style={styles.fabText}>+</Text>
+          </View>
+        </View>
         <Text style={styles.description}>
           Click on ( + ) button to add tasks or notes.
         </Text>
@@ -144,5 +152,29 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     color: '#b2b2b7',
     marginTop: 10,
+  },
+  addContainer: {
+    width: '100%',
+    borderWidth: 0.5,
+    borderColor: 'grey',
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fabBtn: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ff5b77',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    marginRight: 15,
+    elevation: 10,
+  },
+  fabText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 });
