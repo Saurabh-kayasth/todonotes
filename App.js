@@ -7,14 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {StatusBar} from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme as NavigationDefaultTheme,
@@ -29,11 +22,15 @@ import {
 import MainStack from './src/router/router';
 import AppIntro from './src/screens/AppIntro';
 import AsyncStorage from '@react-native-community/async-storage';
-import {STORAGE_KEY} from './src/constants/Constants';
+import {STORAGE_KEY, THEME_KEY} from './src/constants/Constants';
+import {AuthContext} from './src/context/AuthContext';
 
 const App = () => {
   const [showMainApp, setShowMainApp] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState();
+  const [theme, setTheme] = useState();
+  const [loading, setLoading] = useState(true);
+
   const CustomDefaultTheme = {
     ...NavigationDefaultTheme,
     ...PaperDefaultTheme,
@@ -90,18 +87,63 @@ const App = () => {
     fetchMyAPI();
   }, [showMainApp]);
 
-  const theme = !isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-  console.disableYellowBox = true;
+  const authContext = React.useMemo(
+    () => ({
+      toggleTheme: () => {
+        setIsDarkTheme((isDarkTheme) => !isDarkTheme);
+        console.log(isDarkTheme);
+        if (!isDarkTheme) {
+          setTheme(CustomDarkTheme);
+        } else {
+          setTheme(CustomDefaultTheme);
+        }
+      },
+    }),
+    [CustomDarkTheme, CustomDefaultTheme, isDarkTheme],
+  );
+
+  // const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
+
+  const getTheme = async () => {
+    const themeValue = await AsyncStorage.getItem(THEME_KEY);
+    console.log(themeValue);
+    if (themeValue === undefined || themeValue === null) {
+      setTheme(CustomDarkTheme);
+      setLoading(false);
+      setIsDarkTheme(true);
+    } else {
+      if (themeValue === 'DARK') {
+        setIsDarkTheme(true);
+        setTheme(CustomDarkTheme);
+        setLoading(false);
+      } else {
+        setIsDarkTheme(false);
+        setTheme(CustomDefaultTheme);
+        setLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getTheme();
+  }, []);
+
+  useEffect(() => {}, []);
+  // console.disableYellowBox = true;
   return (
-    <PaperProvider theme={theme}>
-      <StatusBar backgroundColor={theme.colors.SecondaryColor} />
-      {showMainApp && (
-        <NavigationContainer theme={theme}>
-          <MainStack />
-        </NavigationContainer>
-      )}
-      {!showMainApp && <AppIntro setShowMainApp={setShowMainApp} />}
-    </PaperProvider>
+    !loading && (
+      <PaperProvider theme={theme}>
+        <AuthContext.Provider value={authContext}>
+          <StatusBar backgroundColor={theme.colors.SecondaryColor} />
+          {showMainApp && (
+            <NavigationContainer theme={theme}>
+              <MainStack />
+            </NavigationContainer>
+          )}
+          {!showMainApp && <AppIntro setShowMainApp={setShowMainApp} />}
+        </AuthContext.Provider>
+      </PaperProvider>
+    )
   );
 };
 

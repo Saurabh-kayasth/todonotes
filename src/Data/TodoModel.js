@@ -30,6 +30,18 @@ const SubTaskSchema = {
   },
 };
 
+const NotesSchema = {
+  name: 'NOTES',
+  primaryKey: 'id',
+  properties: {
+    id: 'int',
+    noteName: 'string',
+    dateTime: 'date',
+    isFav: 'int',
+    description: 'string',
+  },
+};
+
 // const SettingSchema = {
 //   name: 'WPCSettings',
 //   properties: {
@@ -46,7 +58,7 @@ export default class TodoModel extends Component {
   }
   // Add New Folder
   addTask(taskObj) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     // taskObj.id = new Date().getTime();
     console.log('===========main===============');
     console.log(taskObj);
@@ -58,7 +70,7 @@ export default class TodoModel extends Component {
 
   // Add New File
   addSubTask(taskId, subTaskObj) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     for (let i = 0; i < subTaskObj.length; i++) {
       subTaskObj[i].taskId = taskId;
       realm.write(() => {
@@ -73,21 +85,21 @@ export default class TodoModel extends Component {
 
   // get only folders
   getTasks() {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const folders = realm.objects('TASK');
     return folders;
   }
 
   // get files only for given folder id
   getSubTasksWithTaskId(folderId) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const files = realm.objects('SUBTASK').filtered('taskId = $0', folderId);
     return files;
   }
 
   // number of files inside folder
   getNumberOfSubTasksFromTaskId(folderId) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const tasks = realm.objects('SUBTASK').filtered('taskId = $0', folderId);
     const doneTasks = realm
       .objects('SUBTASK')
@@ -98,7 +110,7 @@ export default class TodoModel extends Component {
   // delete folder and files inside it
   deleteTaskWithId(folderId) {
     console.log('FOLDER ID ================== ', folderId);
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     realm.write(() => {
       const folder = realm.objects('TASK').filtered('id == $0', folderId);
       const files = realm.objects('SUBTASK').filtered('taskId == $0', folderId);
@@ -108,7 +120,7 @@ export default class TodoModel extends Component {
   }
 
   changeOnlyMainTaskStatusWithId(taskId, status) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const file = realm.objects('TASK').filtered('id == $0', taskId);
     realm.write(() => {
       file[0].isDone = status;
@@ -117,7 +129,7 @@ export default class TodoModel extends Component {
 
   // change main task status
   changeMainTaskStatusWithId(taskId, status) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const file = realm.objects('TASK').filtered('id == $0', taskId);
     realm.write(() => {
       file[0].isDone = status;
@@ -127,7 +139,7 @@ export default class TodoModel extends Component {
 
   // change All subtask status
   changeAllSubTaskStatusWithId(subTaskId, status) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const file = realm.objects('SUBTASK').filtered('taskId == $0', subTaskId);
     realm.write(() => {
       for (let i = 0; i < file.length; i++) {
@@ -138,10 +150,53 @@ export default class TodoModel extends Component {
 
   // change subtask status
   changeSubTaskStatusWithId(subTaskId, status) {
-    let realm = new Realm({schema: [TaskSchema, SubTaskSchema]});
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
     const file = realm.objects('SUBTASK').filtered('id == $0', subTaskId);
     realm.write(() => {
       file[0].isDone = status;
+    });
+  }
+
+  //NOTES APP
+  // Add notes
+  addNotes(noteObj) {
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
+    realm.write(() => {
+      realm.create('NOTES', noteObj, true);
+    });
+  }
+
+  //getNotes
+  getNotes() {
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
+    const notes = realm.objects('NOTES');
+    return notes;
+  }
+
+  // Delete notes with id list
+  deleteNotes(idList) {
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
+    realm.write(() => {
+      for (let i = 0; i < idList.length; i++) {
+        const note = realm.objects('NOTES').filtered('id == $0', idList[i]);
+        realm.delete(note);
+      }
+    });
+  }
+
+  //updateNotes
+  updateNotes(noteObj) {
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>');
+  }
+
+  // Save notes as favourites
+  saveFavNotes(idList, status) {
+    let realm = new Realm({schema: [TaskSchema, SubTaskSchema, NotesSchema]});
+    realm.write(() => {
+      for (let i = 0; i < idList.length; i++) {
+        const note = realm.objects('NOTES').filtered('id == $0', idList[i]);
+        note[0].isFav = status;
+      }
     });
   }
 }

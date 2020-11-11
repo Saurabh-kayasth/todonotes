@@ -126,7 +126,8 @@ function Home(props) {
           </Transitioning.View>
         )}
         <FAB
-          style={[styles.fab, {backgroundColor: colors.SecondaryColor}]}
+          style={styles.fab}
+          color="#fff"
           small
           icon="plus"
           onPress={() => addTask()}
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
     borderLeftColor: '#ff5b77',
   },
   fab: {
+    backgroundColor: '#ff5b77',
     position: 'absolute',
     margin: 16,
     right: 0,

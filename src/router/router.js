@@ -8,6 +8,7 @@ import {useTheme} from 'react-native-paper';
 import AddTask from '../screens/AddTask';
 import Notes from '../screens/Notes';
 import Settings from '../screens/Settings';
+import AddNotes from '../screens/AddNotes';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -74,7 +75,7 @@ function Tabs() {
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon
-              name={focused ? 'star' : 'star-outline'}
+              name={focused ? 'cog' : 'cog-outline'}
               size={25}
               color={color}
             />
@@ -118,6 +119,17 @@ export default function MainStack() {
         options={{
           headerShown: true,
           headerTitle: 'Add Task',
+          headerStyle: {
+            backgroundColor: colors.SecondaryColor,
+          },
+        }}
+      />
+      <Stack.Screen
+        component={AddNotes}
+        name="addNotes"
+        options={{
+          headerShown: true,
+          headerTitle: 'Create Notes',
           headerStyle: {
             backgroundColor: colors.SecondaryColor,
           },

@@ -5,31 +5,37 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
+  // TouchableHighlight,
+  // TouchableWithoutFeedback,
 } from 'react-native';
-import HeaderCompponent from '../components/HeaderComponent';
+// import HeaderCompponent from '../components/HeaderComponent';
 import {
-  BackgroundColor,
+  // BackgroundColor,
   BorderColor,
-  HeadingColor,
-  IconColor,
+  // HeadingColor,
+  // IconColor,
   PlaceholderColor,
-  SecondaryColor,
+  // SecondaryColor,
 } from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LAZY_LOAD_KEY, THEME_KEY} from '../constants/Constants';
+import {useTheme} from 'react-native-paper';
+import {AuthContext} from '../context/AuthContext';
 
 function Settings(props) {
-  const [switchValue, setSwitchValue] = useState(false);
+  const [switchValue, setSwitchValue] = useState();
   // const [lazyLoad, setLazyLoad] = useState('');
+  const {colors} = useTheme();
+  const paperTheme = useTheme();
+  const {toggleTheme} = React.useContext(AuthContext);
 
   const handleToggle = async () => {
-    if (switchValue) {
-      await AsyncStorage.setItem(LAZY_LOAD_KEY, 'FALSE');
+    toggleTheme();
+    if (!switchValue) {
+      await AsyncStorage.setItem(THEME_KEY, 'DARK');
     } else {
-      await AsyncStorage.setItem(LAZY_LOAD_KEY, 'TRUE');
+      await AsyncStorage.setItem(THEME_KEY, 'LIGHT');
     }
 
     setSwitchValue(!switchValue);
@@ -42,47 +48,34 @@ function Settings(props) {
   // };
 
   useEffect(() => {
-    // getTheme();
-    getLazyStatus();
+    getTheme();
   }, []);
 
-  const getLazyStatus = async () => {
-    const isLazyLoadEnabled = await AsyncStorage.getItem(LAZY_LOAD_KEY);
-    if (isLazyLoadEnabled === null || isLazyLoadEnabled === undefined) {
-      setSwitchValue(false);
+  const getTheme = async () => {
+    const themeName = await AsyncStorage.getItem(THEME_KEY);
+    console.log(themeName);
+    if (themeName === null || themeName === undefined) {
+      setSwitchValue(true);
     } else {
-      if (isLazyLoadEnabled === 'TRUE') {
+      if (themeName === 'DARK') {
         setSwitchValue(true);
-      } else {
+      } else if (themeName === 'LIGHT') {
         setSwitchValue(false);
       }
     }
   };
 
-  const goToPrivacy = () => {
-    props.navigation.navigate('Privacy');
-  };
-
-  // const getTheme = async () => {
-  //   const themeName = await AsyncStorage.getItem(THEME_KEY);
-  //   console.log(themeName);
-  //   if (themeName === null || themeName === undefined) {
-  //     setTheme('DEFAULT');
-  //   } else {
-  //     setTheme(themeName);
-  //   }
-  // };
-
   return (
-    <View style={styles.container}>
-      <HeaderCompponent header={'Settings'} icon={'cog'} />
+    <View style={[styles.container, {backgroundColor: colors.BackgroundColor}]}>
+      {/* <HeaderCompponent header={'Settings'} icon={'cog'} /> */}
 
       {/* LAZY LOADING */}
-      <View style={styles.optioNMain}>
+      <View
+        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
         <View style={styles.optionContainer}>
           <View style={styles.optionLeft}>
-            <Icon name="script-text-outline" size={20} color={IconColor} />
-            <Text style={styles.text}>Lazy Loading</Text>
+            <Icon name="weather-sunny" size={20} color={colors.IconColor} />
+            <Text style={[styles.text, {color: colors.text}]}>Dark Mode</Text>
           </View>
           <View>
             <Switch
@@ -93,85 +86,30 @@ function Settings(props) {
             />
           </View>
         </View>
-        <Text style={styles.description}>
-          If enabled it will try to open up all lazy elements but dowloading
-          speed may get slow down.
-        </Text>
       </View>
 
       {/* LAZY LOADING */}
       <Text style={{marginLeft: 15, color: '#b2b2b7', marginTop: 10}}>
-        Other
+        Help
       </Text>
-      <TouchableHighlight
-        style={[styles.optioNMain, {paddingBottom: 15}]}
-        onPress={goToPrivacy}>
-        <View style={styles.optionContainer}>
-          <View style={styles.optionLeft}>
-            <Icon name="vpn" size={20} color={IconColor} />
-            <Text style={styles.text}>Privacy</Text>
-          </View>
-        </View>
-      </TouchableHighlight>
-
-      {/* THEME */}
-      {/* <View style={styles.optioNMain}>
-              <View
-                style={[
-                  styles.optionContainer,
-                  // eslint-disable-next-line react-native/no-inline-styles
-                  {flexDirection: 'column', alignItems: 'flex-start'},
-                ]}>
-                <View style={styles.optionLeft}>
-                  <Icon name="tab" size={20} color={IconColor} />
-                  <Text style={styles.text}>Theme</Text>
-                </View>
-                <View style={styles.tabsContainer}>
-                  <TouchableHighlight
-                    onPress={() => onThemeSelection('DEFAULT')}
-                    style={[
-                      styles.btn,
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      {
-                        borderColor:
-                          theme === 'DEFAULT' ? '#ff5b77' : BorderColor,
-                      },
-                    ]}>
-                    <Image
-                      style={styles.img}
-                      source={require('../assets/F1.png')}
-                    />
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    style={[
-                      styles.btn,
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      {borderColor: theme === 'DARK' ? '#ff5b77' : BorderColor},
-                    ]}
-                    onPress={() => onThemeSelection('DARK')}>
-                    <Image
-                      style={styles.img}
-                      source={require('../assets/F1.png')}
-                    />
-                  </TouchableHighlight>
-                  <TouchableHighlight
-                    style={[
-                      styles.btn,
-                      // eslint-disable-next-line react-native/no-inline-styles
-                      {
-                        borderColor:
-                          theme === 'LIGHT' ? '#ff5b77' : BorderColor,
-                      },
-                    ]}
-                    onPress={() => onThemeSelection('LIGHT')}>
-                    <Image
-                      style={styles.img}
-                      source={require('../assets/F1.png')}
-                    />
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </View> */}
+      <View
+        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
+        <Text style={[styles.heading, {color: colors.text}]}>
+          Add Notes or Tasks
+        </Text>
+        <Image style={styles.img} source={require('../assets/F1.png')} />
+        <Text style={styles.description}>
+          Click on ( + ) button to add tasks or notes.
+        </Text>
+      </View>
+      <View
+        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
+        <Text style={[styles.heading, {color: colors.text}]}>Delete Tasks</Text>
+        <Image style={styles.img} source={require('../assets/F1.png')} />
+        <Text style={styles.description}>
+          Long press on task/tasks to delete them.
+        </Text>
+      </View>
     </View>
   );
 }
@@ -181,15 +119,13 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BackgroundColor,
   },
   optioNMain: {
     margin: 10,
     marginBottom: 0,
     padding: 10,
     paddingTop: 15,
-    paddingBottom: 10,
-    backgroundColor: SecondaryColor,
+    paddingBottom: 15,
   },
   optionContainer: {
     flexDirection: 'row',
@@ -202,7 +138,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: HeadingColor,
     marginLeft: 10,
   },
   description: {
@@ -227,6 +162,10 @@ const styles = StyleSheet.create({
   },
   img: {
     width: '100%',
-    height: '100%',
+    height: 80,
+  },
+  heading: {
+    fontSize: 20,
+    marginBottom: 10,
   },
 });

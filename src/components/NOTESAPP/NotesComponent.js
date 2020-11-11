@@ -28,6 +28,11 @@ const NotesComponent = (props) => {
     if (props.init) {
       setPressed(!pressed);
       props.handleLongPress(props.item.id);
+    } else {
+      props.navigation.navigate('addNotes', {
+        item: props.item,
+        addNotes: props.addNotes,
+      });
     }
   };
 
@@ -41,7 +46,7 @@ const NotesComponent = (props) => {
       style={[
         styles.notesContainer,
         {
-          backgroundColor: pressed ? '#595959' : colors.SecondaryColor,
+          backgroundColor: pressed ? '#696969' : colors.SecondaryColor,
           width: props.orientation === 'LANDSCAPE' ? '23%' : '46%',
         },
       ]}>
@@ -55,10 +60,10 @@ const NotesComponent = (props) => {
           <Text
             style={[styles.heading, {color: colors.text}]}
             numberOfLines={1}>
-            This is dubug time now
+            {props.item.noteName}
           </Text>
           <Text style={styles.description} numberOfLines={5}>
-            {text}
+            {props.item.description}
           </Text>
         </>
       </TouchableRipple>

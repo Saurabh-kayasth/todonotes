@@ -6,14 +6,22 @@ import NotesComponent from '../components/NOTESAPP/NotesComponent';
 import {Styles} from '../styles/Styles';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import TodoModel from '../Data/TodoModel';
 
-const Notes = () => {
+const Notes = (props) => {
   const {colors} = useTheme();
   const window = useWindowDimensions();
   const [orientation, setOrientation] = useState('');
   const [idList, setIdList] = useState([]);
   const [init, setInit] = useState(false);
   const [isFav, setIsFav] = useState(false);
+  const [notesList, setNotesLst] = useState([]);
+
+  useEffect(() => {
+    const todoModel = new TodoModel();
+    const notes = todoModel.getNotes();
+    setNotesLst(notes);
+  }, []);
 
   const getOrientation = () => {
     if (window.height < window.width) {
@@ -51,7 +59,64 @@ const Notes = () => {
   };
 
   const handleDelete = () => {
-    //
+    console.log(idList);
+    if (idList.length > 0) {
+      const notesLst = [...notesList];
+      for (let i = 0; i < idList.length; i++) {
+        let j = 0;
+        while (j < notesLst.length) {
+          if (notesLst[j].id === idList[i]) {
+            notesLst.splice(j, 1);
+            j = 0;
+          } else {
+            j++;
+          }
+        }
+      }
+      const todoModel = new TodoModel();
+      todoModel.deleteNotes(idList);
+      setIdList([]);
+      console.log('-+-+-+-+-+-+-+-+-+-+------------');
+      console.log(notesLst);
+      setNotesLst(notesLst);
+      setInit(false);
+    }
+  };
+
+  const goToAddNote = () => {
+    props.navigation.navigate('addNotes', {addNotes: addNotes});
+  };
+
+  const checkIfExist = (notesArr, id) => {
+    for (let i = 0; i < notesArr.length; i++) {
+      if (notesArr[i].id === id) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const addNotes = (notesObj) => {
+    console.log('++++++++++++++++++++++');
+    console.log(notesObj);
+
+    const notesArr = [...notesList];
+    if (notesArr.length === 0) {
+      notesArr.push(notesObj);
+    }
+    if (!checkIfExist(notesArr, notesObj.id)) {
+      notesArr.push(notesObj);
+    } else {
+      for (let i = 0; i < notesArr.length; i++) {
+        if (notesArr[i].id === notesObj.id) {
+          notesArr[i].noteName = notesObj.noteName;
+          notesArr[i].description = notesObj.description;
+        }
+      }
+    }
+    const todoModel = new TodoModel();
+    todoModel.addNotes(notesObj);
+    setNotesLst(notesArr);
   };
 
   return (
@@ -59,26 +124,9 @@ const Notes = () => {
       <FlatList
         key={orientation}
         numColumns={orientation === 'LANDSCAPE' ? 4 : 2}
-        contentContainerStyle={{
-          justifyContent: 'center',
-          padding: 7,
-          flexWrap: 'nowrap',
-          flexGrow: 0,
-        }}
-        data={[
-          {id: 1},
-          {id: 2},
-          {id: 3},
-          {id: 4},
-          {id: 5},
-          {id: 6},
-          {id: 7},
-          {id: 8},
-          {id: 9},
-          {id: 10},
-          {id: 11},
-          {id: 12},
-        ]}
+        keyExtractor={(item, index) => item.id}
+        contentContainerStyle={styles.flatListContainer}
+        data={notesList}
         renderItem={({item, index}) => {
           return (
             <NotesComponent
@@ -88,17 +136,22 @@ const Notes = () => {
               orientation={orientation}
               key={index}
               handleLongPress={handleLongPress}
+              navigation={props.navigation}
+              addNotes={addNotes}
             />
           );
         }}
       />
+      {idList <= 0 && (
+        <FAB
+          style={styles.fab}
+          small
+          color="#fff"
+          icon="plus"
+          onPress={() => goToAddNote()}
+        />
+      )}
 
-      <FAB
-        style={[styles.fab, {backgroundColor: colors.SecondaryColor}]}
-        small
-        icon="plus"
-        // onPress={() => addTask()}
-      />
       {idList.length > 0 && (
         <Animatable.View
           animation="fadeInUpBig"
@@ -108,13 +161,13 @@ const Notes = () => {
               backgroundColor: colors.SecondaryColor,
             },
           ]}>
-          <TouchableRipple onPress={handleStar}>
+          {/* <TouchableRipple onPress={handleStar}>
             <Icon
               name={isFav ? 'star' : 'star-outline'}
               color="gold"
               size={30}
             />
-          </TouchableRipple>
+          </TouchableRipple> */}
           <TouchableRipple onPress={handleDelete}>
             <Icon name="delete-outline" color="#ff0000" size={30} />
           </TouchableRipple>
@@ -136,17 +189,25 @@ const styles = StyleSheet.create({
     width: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#ff5b77',
   },
   footer: {
-    width: '40%',
+    width: '20%', //40
     height: 50,
     borderRadius: 30,
-    marginBottom: 20,
-    zIndex: 100,
+    marginBottom: 15,
+    marginTop: 15,
+    // zIndex: 100,
     padding: 10,
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  flatListContainer: {
+    justifyContent: 'center',
+    padding: 7,
+    flexWrap: 'nowrap',
+    flexGrow: 0,
   },
 });

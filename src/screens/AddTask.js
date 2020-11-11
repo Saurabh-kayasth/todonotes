@@ -149,16 +149,16 @@ const AddTask = (props) => {
 
         {isSubTask && (
           <>
-            <Text>Subtodos</Text>
+            <Text>SUBTASKS</Text>
             <Surface style={styles.subContainer}>
               {subTasks.map((item, index) => (
                 <>
                   <View style={styles.subInner} key={index}>
                     <TextInput
                       mode="outlined"
-                      label="SubToDo Title"
+                      label="Subtask Title"
                       value={subTasks[index].subTaskName}
-                      placeholder="Enter subtodo title"
+                      placeholder="Enter subtask title"
                       onChangeText={(e) => onSubTaskTitleChange(index, e)}
                       style={[
                         styles.input,
@@ -186,7 +186,7 @@ const AddTask = (props) => {
             style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
             onPress={addSubTask}
             rippleColor="rgba(0, 0, 0, .32)">
-            <Text>+ ADD SUBTODOS</Text>
+            <Text>+ ADD SUBTASKS</Text>
           </TouchableRipple>
 
           <TouchableRipple
