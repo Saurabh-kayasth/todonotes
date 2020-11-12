@@ -12,6 +12,7 @@ import {
 } from 'react-native-paper';
 import TodoModel from '../../Data/TodoModel';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import moment from 'moment';
 
 const MainTaskComponent = (props) => {
   const {colors} = useTheme();
@@ -135,9 +136,9 @@ const MainTaskComponent = (props) => {
           color="#3cc66b"
           style={styles.progressBar}
         />
-        {/* <Text style={styles.workDoneLabel}>
-                            Work Done : 30%
-                          </Text> */}
+        <Text style={styles.workDoneLabel}>
+          {moment(props.item.dateTime).calendar()}
+        </Text>
       </View>
     </View>
   );
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
   workDoneLabel: {
     color: 'grey',
     marginTop: 5,
+    alignSelf: 'flex-end',
   },
   progressBar: {
     height: 2,
