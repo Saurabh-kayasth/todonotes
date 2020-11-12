@@ -2,7 +2,7 @@ import React, {useState, useEffect, useReducer} from 'react';
 import {View, TouchableOpacity, StyleSheet, Text} from 'react-native';
 import {Styles} from '../styles/Styles';
 import {useTheme, FAB, Surface} from 'react-native-paper';
-import {Transition, Transitioning} from 'react-native-reanimated';
+import {concat, Transition, Transitioning} from 'react-native-reanimated';
 import TodoModel from '../Data/TodoModel';
 import {TasksReducer} from '../context/ToDoApp/TasksContext';
 import {FlatList} from 'react-native-gesture-handler';
@@ -68,6 +68,9 @@ function Home(props) {
             ref={ref}
             transition={transition}
             style={styles.container}>
+            {state.tasks.length === 0 && (
+              <Text style={styles.errorMsg}>No tasks!</Text>
+            )}
             <FlatList
               data={state.tasks}
               keyExtractor={(item, index) => item.id}
@@ -170,5 +173,11 @@ const styles = StyleSheet.create({
   textContainer: {
     padding: 10,
     flexGrow: 1,
+  },
+  errorMsg: {
+    fontSize: 33,
+    color: 'grey',
+    textAlign: 'center',
+    marginTop: '50%',
   },
 });

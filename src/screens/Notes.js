@@ -113,6 +113,7 @@ const Notes = (props) => {
 
   return (
     <View style={[Styles.container, {backgroundColor: colors.BackgroundColor}]}>
+      {notesList.length === 0 && <Text style={styles.errorMsg}>No notes!</Text>}
       <FlatList
         key={orientation}
         numColumns={orientation === 'LANDSCAPE' ? 4 : 2}
@@ -201,5 +202,11 @@ const styles = StyleSheet.create({
     padding: 7,
     flexWrap: 'nowrap',
     flexGrow: 0,
+  },
+  errorMsg: {
+    fontSize: 33,
+    color: 'grey',
+    textAlign: 'center',
+    marginTop: '50%',
   },
 });

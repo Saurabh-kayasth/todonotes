@@ -129,7 +129,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {}, []);
-  // console.disableYellowBox = true;
+  console.disableYellowBox = true;
   return (
     !loading && (
       <PaperProvider theme={theme}>

@@ -1,16 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {View, Switch, Text, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Switch,
+  Text,
+  StyleSheet,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native';
 import {BorderColor, PlaceholderColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {THEME_KEY} from '../constants/Constants';
-import {FAB, useTheme} from 'react-native-paper';
+import {FAB, Surface, useTheme} from 'react-native-paper';
 import {AuthContext} from '../context/AuthContext';
+import {FlatList} from 'react-native-gesture-handler';
 
 function Settings(props) {
   const [switchValue, setSwitchValue] = useState();
   const {colors} = useTheme();
   const {toggleTheme} = React.useContext(AuthContext);
+  const [orientation, setOrientation] = useState('');
+  const window = useWindowDimensions();
 
   const handleToggle = async () => {
     toggleTheme();
@@ -27,6 +37,20 @@ function Settings(props) {
     getTheme();
   }, []);
 
+  const getOrientation = () => {
+    if (window.height < window.width) {
+      setOrientation('LANDSCAPE');
+    } else {
+      setOrientation('PORTRAIT');
+    }
+    return orientation;
+  };
+
+  useEffect(() => {
+    console.log('=-=-=-=--=-=---=-=-=-=--=--=');
+    getOrientation();
+  });
+
   const getTheme = async () => {
     const themeName = await AsyncStorage.getItem(THEME_KEY);
     console.log(themeName);
@@ -41,56 +65,126 @@ function Settings(props) {
     }
   };
 
-  return (
-    <View style={[styles.container, {backgroundColor: colors.BackgroundColor}]}>
-      {/* THEME */}
+  const renderTask = (taskObj, index, orientation) => {
+    return (
       <View
-        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
-        <View style={styles.optionContainer}>
-          <View style={styles.optionLeft}>
-            <Icon name="weather-sunny" size={20} color={colors.IconColor} />
-            <Text style={[styles.text, {color: colors.text}]}>Dark Mode</Text>
+        style={[
+          styles.task,
+          {
+            backgroundColor:
+              index === 1 || index === 2 ? '#696969' : colors.SecondaryColor,
+            width: orientation === 'LANDSCAPE' ? '23%' : '47%',
+          },
+        ]}>
+        <Text style={{color: colors.text}}>{taskObj.title}</Text>
+        <Text style={[styles.description, {marginTop: 0}]}>
+          {taskObj.description}
+        </Text>
+        <Text style={styles.description}>{taskObj.dateTime}</Text>
+      </View>
+    );
+  };
+
+  const data = [
+    {
+      id: 1,
+      title: 'Task 1',
+      description: 'Unselected notes description',
+      dateTime: '10-01-2000',
+    },
+    {
+      id: 2,
+      title: 'Task 2',
+      description: 'Selected notes description',
+      dateTime: '10-01-2001',
+    },
+    {
+      id: 3,
+      title: 'Task 3',
+      description: 'Selected notes description',
+      dateTime: '10-01-2002',
+    },
+    {
+      id: 4,
+      title: 'Task 14',
+      description: 'Unselected notes description',
+      dateTime: '10-01-2003',
+    },
+  ];
+
+  return (
+    <ScrollView>
+      <View
+        style={[styles.container, {backgroundColor: colors.BackgroundColor}]}>
+        {/* THEME */}
+        <View
+          style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
+          <View style={styles.optionContainer}>
+            <View style={styles.optionLeft}>
+              <Icon name="weather-sunny" size={20} color={colors.IconColor} />
+              <Text style={[styles.text, {color: colors.text}]}>Dark Mode</Text>
+            </View>
+            <View>
+              <Switch
+                trackColor={{false: '#767577', true: '#cc485f'}}
+                thumbColor={switchValue ? '#ff5b77' : '#f4f3f4'}
+                onValueChange={handleToggle}
+                value={switchValue}
+              />
+            </View>
           </View>
-          <View>
-            <Switch
-              trackColor={{false: '#767577', true: '#cc485f'}}
-              thumbColor={switchValue ? '#ff5b77' : '#f4f3f4'}
-              onValueChange={handleToggle}
-              value={switchValue}
+        </View>
+
+        {/* HELP */}
+        <Text style={styles.helpText}>Help</Text>
+        <Surface
+          style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
+          <Text style={[styles.heading, {color: colors.text}]}>
+            Add Notes or Tasks
+          </Text>
+          <View
+            style={[
+              styles.addContainer,
+              {backgroundColor: colors.BackgroundColor},
+            ]}>
+            <View style={styles.fabBtn}>
+              <Text style={styles.fabText}>+</Text>
+            </View>
+          </View>
+          <Text style={styles.description}>
+            Click on ( + ) button to add tasks or notes.
+          </Text>
+        </Surface>
+        <Surface
+          style={[
+            styles.optioNMain,
+            {backgroundColor: colors.SecondaryColor, marginBottom: 20},
+          ]}>
+          <Text style={[styles.heading, {color: colors.text}]}>
+            Delete Notes
+          </Text>
+          <View
+            style={[
+              styles.taskContainer,
+              {backgroundColor: colors.BackgroundColor},
+            ]}>
+            <FlatList
+              data={data}
+              key={orientation}
+              numColumns={orientation === 'LANDSCAPE' ? 4 : 2}
+              keyExtractor={(item, index) => item.id}
+              contentContainerStyle={styles.flatContainer}
+              renderItem={({item, index}) => {
+                return renderTask(item, index, orientation);
+              }}
             />
           </View>
-        </View>
+          <Text style={styles.description}>
+            Long press on note/notes to delete them.
+          </Text>
+        </Surface>
       </View>
-
-      {/* HELP */}
-      <Text style={styles.helpText}>Help</Text>
-      <View
-        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
-        <Text style={[styles.heading, {color: colors.text}]}>
-          Add Notes or Tasks
-        </Text>
-        <View
-          style={[
-            styles.addContainer,
-            {backgroundColor: colors.BackgroundColor},
-          ]}>
-          <View style={styles.fabBtn}>
-            <Text style={styles.fabText}>+</Text>
-          </View>
-        </View>
-        <Text style={styles.description}>
-          Click on ( + ) button to add tasks or notes.
-        </Text>
-      </View>
-      <View
-        style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
-        <Text style={[styles.heading, {color: colors.text}]}>Delete Tasks</Text>
-        <Image style={styles.img} source={require('../assets/F1.png')} />
-        <Text style={styles.description}>
-          Long press on task/tasks to delete them.
-        </Text>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -106,6 +200,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingTop: 15,
     paddingBottom: 15,
+    elevation: 4,
   },
   optionContainer: {
     flexDirection: 'row',
@@ -176,5 +271,27 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
+  },
+  taskContainer: {
+    width: '100%',
+    borderWidth: 0.5,
+    borderColor: 'grey',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 3,
+    // padding: 10,
+  },
+  task: {
+    height: 100,
+    margin: 5,
+    // marginLeft: 0,
+    borderRadius: 10,
+    padding: 7,
+    overflow: 'hidden',
+  },
+  flatContainer: {
+    justifyContent: 'center',
+    flexWrap: 'nowrap',
+    flexGrow: 0,
   },
 });

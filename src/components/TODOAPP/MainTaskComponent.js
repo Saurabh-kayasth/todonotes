@@ -28,12 +28,22 @@ const MainTaskComponent = (props) => {
         count += 1;
       }
     }
-    if (count === props.item.subTodos.length) {
-      setChecked(true);
+    if (props.item.subTodos.length > 0) {
+      if (count === props.item.subTodos.length) {
+        console.log('TTTTTTTTTTTTTTT');
+        setChecked(true);
+      } else {
+        console.log('FFFFFFFFFFFFFFFF');
+        setChecked(false);
+      }
+      setCountNotDone(count);
     } else {
-      setChecked(false);
+      if (props.item.isDone) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
     }
-    setCountNotDone(count);
   }, [props, props.item.isDone]);
 
   const handleCheckBox = (taskId, check) => {
@@ -46,6 +56,7 @@ const MainTaskComponent = (props) => {
       }
     }
     setCountNotDone(count);
+    setChecked(!checked);
 
     if (check) {
       todoModel.changeMainTaskStatusWithId(taskId, 1);

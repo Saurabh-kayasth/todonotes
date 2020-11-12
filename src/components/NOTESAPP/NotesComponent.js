@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   notesContainer: {
     // width: '47%',
     // height: 200,
-    elevation: 0,
+    elevation: 3,
     margin: 8,
     borderRadius: 10,
     flexGrow: 0,
