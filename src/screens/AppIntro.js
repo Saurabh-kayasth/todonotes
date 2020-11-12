@@ -18,28 +18,28 @@ const {width, height} = Dimensions.get('window');
 const slides = [
   {
     key: 1,
-    title: 'Manage Document',
-    text: 'Documents at your finger',
-    description:
-      'Easily organise your documents in app as well as in file manager',
-    image: require('../assets/F1.png'),
-    backgroundColor: '#59b2ab',
+    title: 'Tasks',
+    text: 'Manage Task and Subtasks',
+    description: 'Easily manage tasks/subtasks.',
+    image: require('../assets/A.png'),
+    backgroundColor: '#333333',
   },
   {
     key: 2,
-    title: 'Title 2',
-    text: 'Other cool stuff',
-    description: 'Easily organise your documents',
-    image: require('../assets/F1.png'),
-    backgroundColor: '#febe29',
+    title: 'Notes',
+    text: 'Manage Notes',
+    description:
+      'Easily organise your notes.Delete multiple notes simultaneously',
+    image: require('../assets/B.png'),
+    backgroundColor: '#333333',
   },
   {
     key: 3,
-    title: 'Rocket guy',
-    text: "I'm already out of descriptions",
-    description: 'Easily organise your documents',
-    image: require('../assets/F1.png'),
-    backgroundColor: '#22bcb5',
+    title: 'Settings',
+    text: 'Configurations',
+    description: 'Change theme to light mode or dark mode.',
+    image: require('../assets/C.png'),
+    backgroundColor: '#333333',
   },
 ];
 
@@ -48,9 +48,9 @@ const AppIntro = (props) => {
     return (
       <View style={styles.slide}>
         <Text style={styles.title}>{item.title}</Text>
-        <View style={styles.imageContainer}>
-          <Image source={item.image} style={styles.image} />
-        </View>
+        {/* <View style={styles.imageContainer}> */}
+        <Image source={item.image} style={styles.image} />
+        {/* </View> */}
         <Text style={styles.text}>{item.text}</Text>
         <Text style={styles.description}>{item.description}</Text>
       </View>
@@ -88,7 +88,7 @@ const AppIntro = (props) => {
 
   return (
     <>
-      <StatusBar backgroundColor="#22222d" />
+      <StatusBar backgroundColor="#333333" />
       <AppIntroSlider
         showPrevButton
         showSkipButton
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     height: height + 50,
     width: width,
     padding: 15,
-    backgroundColor: '#22222d',
+    backgroundColor: '#333333',
   },
   title: {
     color: HeadingColor,
@@ -120,10 +120,11 @@ const styles = StyleSheet.create({
   },
   image: {
     // height: '30%',
-    height: height - 230,
-    width: width - 125,
+    // height: height - 230,
+    height: height - 300,
+    width: '100%',
     alignSelf: 'center',
-    marginTop: 60,
+    marginTop: 0,
   },
   buttonCircle: {
     width: 40,

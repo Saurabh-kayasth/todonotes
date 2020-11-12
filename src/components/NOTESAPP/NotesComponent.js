@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {Surface, useTheme, TouchableRipple} from 'react-native-paper';
+import moment from 'moment';
 
 const NotesComponent = (props) => {
   const {colors} = useTheme();
@@ -64,6 +65,9 @@ const NotesComponent = (props) => {
           </Text>
           <Text style={styles.description} numberOfLines={5}>
             {props.item.description}
+          </Text>
+          <Text style={styles.description} numberOfLines={5}>
+            {moment(props.item.dateTime).calendar()}
           </Text>
         </>
       </TouchableRipple>

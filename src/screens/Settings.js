@@ -88,25 +88,25 @@ function Settings(props) {
   const data = [
     {
       id: 1,
-      title: 'Task 1',
+      title: 'Notes 1',
       description: 'Unselected notes description',
       dateTime: '10-01-2000',
     },
     {
       id: 2,
-      title: 'Task 2',
+      title: 'Notes 2',
       description: 'Selected notes description',
       dateTime: '10-01-2001',
     },
     {
       id: 3,
-      title: 'Task 3',
+      title: 'Notes 3',
       description: 'Selected notes description',
       dateTime: '10-01-2002',
     },
     {
       id: 4,
-      title: 'Task 14',
+      title: 'Notes 14',
       description: 'Unselected notes description',
       dateTime: '10-01-2003',
     },
@@ -139,9 +139,12 @@ function Settings(props) {
         <Text style={styles.helpText}>Help</Text>
         <Surface
           style={[styles.optioNMain, {backgroundColor: colors.SecondaryColor}]}>
-          <Text style={[styles.heading, {color: colors.text}]}>
-            Add Notes or Tasks
-          </Text>
+          <View style={[styles.optionLeft, {marginBottom: 10}]}>
+            <Icon name="plus" size={20} color={colors.IconColor} />
+            <Text style={[styles.text, {color: colors.text}]}>
+              Add Notes or Tasks
+            </Text>
+          </View>
           <View
             style={[
               styles.addContainer,
@@ -160,9 +163,12 @@ function Settings(props) {
             styles.optioNMain,
             {backgroundColor: colors.SecondaryColor, marginBottom: 20},
           ]}>
-          <Text style={[styles.heading, {color: colors.text}]}>
-            Delete Notes
-          </Text>
+          <View style={[styles.optionLeft, {marginBottom: 10}]}>
+            <Icon name="delete-outline" size={20} color={colors.IconColor} />
+            <Text style={[styles.text, {color: colors.text}]}>
+              Delete Notes
+            </Text>
+          </View>
           <View
             style={[
               styles.taskContainer,
