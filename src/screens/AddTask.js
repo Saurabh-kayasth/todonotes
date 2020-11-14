@@ -235,7 +235,7 @@ const AddTask = (props) => {
       {modelVisible && (
         <Animatable.View
           animation="fadeInUpBig"
-          style={{backgroundColor: colors.BackgroundColor}}>
+          style={{backgroundColor: colors.BackgroundColor, elevation: 20}}>
           <Surface
             style={[
               styles.footer,
@@ -245,6 +245,7 @@ const AddTask = (props) => {
             ]}>
             <DatePicker
               date={date}
+              dividerHeight={0.4}
               textColor={colors.text}
               fadeToColor={colors.SecondaryColor}
               onDateChange={setDate}
@@ -252,6 +253,39 @@ const AddTask = (props) => {
               androidVariant="iosClone"
             />
           </Surface>
+          <View
+            style={[
+              styles.btnContainer,
+              {
+                marginTop: 0,
+                marginBottom: 0,
+                backgroundColor: colors.SecondaryColor,
+              },
+            ]}>
+            <TouchableRipple
+              style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
+              onPress={addSubTask}
+              rippleColor="rgba(0, 0, 0, .32)">
+              <Text>X Cancel</Text>
+            </TouchableRipple>
+
+            <TouchableRipple
+              style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
+              rippleColor="rgba(0, 0, 0, .5)"
+              onPress={handleSubmit}
+              // onPress={() => addTask()}
+            >
+              <View style={styles.saveInner}>
+                <Icon
+                  name="check"
+                  size={25}
+                  color={colors.IconColor}
+                  style={{marginRight: 10}}
+                />
+                <Text>SET</Text>
+              </View>
+            </TouchableRipple>
+          </View>
         </Animatable.View>
       )}
     </>
@@ -319,6 +353,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 20,
     color: '#fff',
+    // paddingBottom: 50,
   },
   optioNMain: {
     // margin: 10,
@@ -340,5 +375,15 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     marginLeft: 10,
+  },
+  btnInner: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  saveInner: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
