@@ -7,7 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Text, View, StyleSheet, Image} from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme as NavigationDefaultTheme,
@@ -130,21 +130,38 @@ const App = () => {
 
   useEffect(() => {}, []);
   console.disableYellowBox = true;
-  return (
-    !loading && (
-      <PaperProvider theme={theme}>
-        <AuthContext.Provider value={authContext}>
-          <StatusBar backgroundColor={theme.colors.SecondaryColor} />
-          {showMainApp && (
-            <NavigationContainer theme={theme}>
-              <MainStack />
-            </NavigationContainer>
-          )}
-          {!showMainApp && <AppIntro setShowMainApp={setShowMainApp} />}
-        </AuthContext.Provider>
-      </PaperProvider>
-    )
+  return !loading ? (
+    <PaperProvider theme={theme}>
+      <AuthContext.Provider value={authContext}>
+        <StatusBar backgroundColor={theme.colors.SecondaryColor} />
+        {showMainApp && (
+          <NavigationContainer theme={theme}>
+            <MainStack />
+          </NavigationContainer>
+        )}
+        {!showMainApp && <AppIntro setShowMainApp={setShowMainApp} />}
+      </AuthContext.Provider>
+    </PaperProvider>
+  ) : (
+    <View style={styles.splashContainer}>
+      <Image
+        source={require('./src/assets/ic_launcher.png')}
+        style={styles.img}
+      />
+    </View>
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  splashContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  img: {
+    width: '40%',
+  },
+});

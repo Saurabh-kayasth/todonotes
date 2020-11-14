@@ -11,6 +11,8 @@ import {Styles} from '../styles/Styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ScrollView} from 'react-native-gesture-handler';
 import TodoModel from '../Data/TodoModel';
+import DatePicker from 'react-native-date-picker';
+import * as Animatable from 'react-native-animatable';
 
 const AddTask = (props) => {
   const {colors} = useTheme();
@@ -21,6 +23,8 @@ const AddTask = (props) => {
   const [submitted, setSubmitted] = useState(false);
   const [isSubTask, setIsSubTask] = useState(false);
   const [taskId, setTaskId] = useState(new Date().getTime());
+  const [date, setDate] = useState(new Date());
+  const [modelVisible, setModelVisible] = useState(false);
 
   const onSubTaskTitleChange = (index, e) => {
     console.log(e);
@@ -113,97 +117,144 @@ const AddTask = (props) => {
     updateValidation(validationArr);
   };
 
+  const setNotification = () => {
+    setModelVisible(!modelVisible);
+  };
+
   return (
-    <View
-      style={[
-        Styles.container,
-        {padding: 10, backgroundColor: colors.BackgroundColor},
-      ]}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* <FileHeaderComponent header={'Add To Do'} navigation={props.navigation} /> */}
-        <TextInput
-          mode="flat"
-          label="Task Name"
-          value={taskName}
-          placeholder="Enter task name"
-          onChangeText={(text) => setTaskName(text)}
-          style={[styles.input, {backgroundColor: colors.SecondaryColor}]}
-        />
-        {submitted && taskName.length < 1 && (
-          <Text style={styles.error}>Task name can't be empty!</Text>
-        )}
-        <TextInput
-          mode="flat"
-          label="Description"
-          value={description}
-          placeholder="Enter task description"
-          onChangeText={(text) => setDescription(text)}
-          multiline
-          numberOfLines={5}
-          style={[styles.input, {backgroundColor: colors.SecondaryColor}]}
-        />
+    <>
+      <View
+        style={[
+          Styles.container,
+          {padding: 10, backgroundColor: colors.BackgroundColor},
+        ]}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* <FileHeaderComponent header={'Add To Do'} navigation={props.navigation} /> */}
+          <TextInput
+            mode="flat"
+            label="Task Name"
+            value={taskName}
+            placeholder="Enter task name"
+            onChangeText={(text) => setTaskName(text)}
+            style={[styles.input, {backgroundColor: colors.SecondaryColor}]}
+          />
+          {submitted && taskName.length < 1 && (
+            <Text style={styles.error}>Task name can't be empty!</Text>
+          )}
+          <TextInput
+            mode="flat"
+            label="Description"
+            value={description}
+            placeholder="Enter task description"
+            onChangeText={(text) => setDescription(text)}
+            multiline
+            numberOfLines={5}
+            style={[styles.input, {backgroundColor: colors.SecondaryColor}]}
+          />
 
-        {isSubTask && (
-          <>
-            <Text>SUBTASKS</Text>
-            <Surface style={styles.subContainer}>
-              {subTasks.map((item, index) => (
-                <>
-                  <View style={styles.subInner} key={index}>
-                    <TextInput
-                      mode="outlined"
-                      label="Subtask Title"
-                      value={subTasks[index].subTaskName}
-                      placeholder="Enter subtask title"
-                      onChangeText={(e) => onSubTaskTitleChange(index, e)}
-                      style={[
-                        styles.input,
-                        {width: '85%', height: 45, marginRight: 10},
-                      ]}
-                    />
-                    <TouchableRipple
-                      style={[styles.deleteBtn]}
-                      onPress={() => deleteSubTask(index)}
-                      rippleColor="rgba(0, 0, 0, .32)">
-                      <Icon name="delete-outline" color="#ff0000" size={35} />
-                    </TouchableRipple>
-                  </View>
-                  {!validation[index].subTaskName && submitted && (
-                    <Text style={styles.error}>Title can't be empty!</Text>
-                  )}
-                </>
-              ))}
-            </Surface>
-          </>
-        )}
+          <View
+            style={[
+              styles.optioNMain,
+              {backgroundColor: colors.SecondaryColor},
+            ]}>
+            <View style={styles.optionContainer}>
+              <View style={styles.optionLeft}>
+                <Icon name="bell" size={20} color={colors.IconColor} />
+                <Text style={[styles.text, {color: colors.text}]}>Notify</Text>
+              </View>
+              <View>
+                <TouchableRipple onPress={setNotification}>
+                  <Icon name="bell" color={colors.IconColor} size={25} />
+                </TouchableRipple>
+              </View>
+            </View>
+          </View>
 
-        <View style={styles.btnContainer}>
-          <TouchableRipple
-            style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
-            onPress={addSubTask}
-            rippleColor="rgba(0, 0, 0, .32)">
-            <Text>+ ADD SUBTASKS</Text>
-          </TouchableRipple>
-
-          <TouchableRipple
-            style={[styles.saveBtn, {backgroundColor: colors.SecondaryColor}]}
-            rippleColor="rgba(0, 0, 0, .5)"
-            onPress={handleSubmit}
-            // onPress={() => addTask()}
-          >
+          {isSubTask && (
             <>
-              <Icon
-                name="check"
-                size={25}
-                color={colors.IconColor}
-                style={{marginRight: 10}}
-              />
-              <Text>SAVE</Text>
+              <Text>SUBTASKS</Text>
+              <Surface style={styles.subContainer}>
+                {subTasks.map((item, index) => (
+                  <>
+                    <View style={styles.subInner} key={index}>
+                      <TextInput
+                        mode="outlined"
+                        label="Subtask Title"
+                        value={subTasks[index].subTaskName}
+                        placeholder="Enter subtask title"
+                        onChangeText={(e) => onSubTaskTitleChange(index, e)}
+                        style={[
+                          styles.input,
+                          {width: '85%', height: 45, marginRight: 10},
+                        ]}
+                      />
+                      <TouchableRipple
+                        style={[styles.deleteBtn]}
+                        onPress={() => deleteSubTask(index)}
+                        rippleColor="rgba(0, 0, 0, .32)">
+                        <Icon name="delete-outline" color="#ff0000" size={35} />
+                      </TouchableRipple>
+                    </View>
+                    {!validation[index].subTaskName && submitted && (
+                      <Text style={styles.error}>Title can't be empty!</Text>
+                    )}
+                  </>
+                ))}
+              </Surface>
             </>
-          </TouchableRipple>
-        </View>
-      </ScrollView>
-    </View>
+          )}
+
+          <View style={styles.btnContainer}>
+            <TouchableRipple
+              style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
+              onPress={addSubTask}
+              rippleColor="rgba(0, 0, 0, .32)">
+              <Text>+ ADD SUBTASKS</Text>
+            </TouchableRipple>
+
+            <TouchableRipple
+              style={[styles.saveBtn, {backgroundColor: colors.SecondaryColor}]}
+              rippleColor="rgba(0, 0, 0, .5)"
+              onPress={handleSubmit}
+              // onPress={() => addTask()}
+            >
+              <>
+                <Icon
+                  name="check"
+                  size={25}
+                  color={colors.IconColor}
+                  style={{marginRight: 10}}
+                />
+                <Text>SAVE</Text>
+              </>
+            </TouchableRipple>
+          </View>
+        </ScrollView>
+      </View>
+
+      {modelVisible && (
+        <Animatable.View
+          animation="fadeInUpBig"
+          style={{backgroundColor: colors.BackgroundColor}}>
+          <Surface
+            style={[
+              styles.footer,
+              {
+                backgroundColor: colors.SecondaryColor,
+              },
+            ]}>
+            <DatePicker
+              date={date}
+              textColor={colors.text}
+              fadeToColor={colors.SecondaryColor}
+              onDateChange={setDate}
+              // fadeToColor={{color: '#fff'}}
+              androidVariant="iosClone"
+            />
+          </Surface>
+        </Animatable.View>
+      )}
+    </>
   );
 };
 
@@ -262,5 +313,32 @@ const styles = StyleSheet.create({
   error: {
     color: '#ff0000',
     marginBottom: 5,
+  },
+  footer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 20,
+    color: '#fff',
+  },
+  optioNMain: {
+    // margin: 10,
+    marginBottom: 0,
+    padding: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    elevation: 4,
+  },
+  optionContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  optionLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 20,
+    marginLeft: 10,
   },
 });
