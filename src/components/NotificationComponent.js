@@ -1,20 +1,20 @@
 import PushNotification from 'react-native-push-notification';
 
-const NotificationComponent = (message) => {
+const NotificationComponent = (id, message, description, date) => {
   PushNotification.localNotificationSchedule({
-    id: '1',
+    id: id.toString().substring(6),
     // title: 'title',
     // autoCancel: true,
-    // bigText:
+    bigText: description,
     // 'This is local notification demo in React Native app. Only shown, when expanded.',
     // subText: 'Local Notification Demo',
-    title: 'Scheduled File',
-    message: 'TASK REMINDER',
-    // date: new Date(Date.now() + time * 1000),
+    title: message,
+    message: description,
+    date: new Date(date),
     vibrate: true,
     vibration: 300,
     playSound: true,
-    // soundName: 'default',
+    soundName: 'default',
     // actions: '["Read Now", "Read Later"]',
   });
 };

@@ -13,6 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import TodoModel from '../Data/TodoModel';
 import DatePicker from 'react-native-date-picker';
 import * as Animatable from 'react-native-animatable';
+import NotificationComponent from '../components/NotificationComponent';
 
 const AddTask = (props) => {
   const {colors} = useTheme();
@@ -25,6 +26,7 @@ const AddTask = (props) => {
   const [taskId, setTaskId] = useState(new Date().getTime());
   const [date, setDate] = useState(new Date());
   const [modelVisible, setModelVisible] = useState(false);
+  const [isNotify, setIsNotify] = useState(false);
 
   const onSubTaskTitleChange = (index, e) => {
     console.log(e);
@@ -71,6 +73,16 @@ const AddTask = (props) => {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    let n_id = taskId;
+    n_id = n_id.toString();
+    n_id = n_id.substring(6);
+    console.log(n_id);
+    NotificationComponent(
+      taskId,
+      'Scheduled Task : ' + taskName,
+      description,
+      date,
+    );
     const tasks = {
       id: taskId,
       taskName: taskName,
@@ -121,6 +133,22 @@ const AddTask = (props) => {
     setModelVisible(!modelVisible);
   };
 
+  const closeModel = () => {
+    setModelVisible(false);
+  };
+
+  const handleNotify = () => {
+    console.log(date);
+    setIsNotify(true);
+    setModelVisible(false);
+    NotificationComponent(
+      taskId,
+      'Scheduled Task : ' + taskName,
+      description,
+      date,
+    );
+  };
+
   return (
     <>
       <View
@@ -164,7 +192,11 @@ const AddTask = (props) => {
               </View>
               <View>
                 <TouchableRipple onPress={setNotification}>
-                  <Icon name="bell" color={colors.IconColor} size={25} />
+                  <Icon
+                    name="bell"
+                    color={isNotify ? '#ff5b77' : 'gray'}
+                    size={25}
+                  />
                 </TouchableRipple>
               </View>
             </View>
@@ -264,7 +296,7 @@ const AddTask = (props) => {
             ]}>
             <TouchableRipple
               style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
-              onPress={addSubTask}
+              onPress={closeModel}
               rippleColor="rgba(0, 0, 0, .32)">
               <Text>X Cancel</Text>
             </TouchableRipple>
@@ -272,7 +304,7 @@ const AddTask = (props) => {
             <TouchableRipple
               style={[styles.btn, {backgroundColor: colors.SecondaryColor}]}
               rippleColor="rgba(0, 0, 0, .5)"
-              onPress={handleSubmit}
+              onPress={handleNotify}
               // onPress={() => addTask()}
             >
               <View style={styles.saveInner}>
